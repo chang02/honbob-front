@@ -1,5 +1,10 @@
 # honbob-front
 
+## Node Version
+```
+8.10.0
+```
+
 ## Project setup
 ```
 npm install
