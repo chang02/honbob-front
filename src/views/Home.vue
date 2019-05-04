@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <toolbar></toolbar>
+    <toolbar />
     <v-card>
       <v-img :src="require('../assets/foods.jpg')" id="front-image" aspect-ratio="4"
       gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)">
@@ -13,23 +13,51 @@
         </v-container>
       </v-img>
     </v-card>
-    <v-container id="matching-system" align-center>
-      <filter-option></filter-option>
-      <matching-list></matching-list>
+    <v-container id="matching-container" align-center>
+      <filter-option />
+      <v-layout column>
+        <v-flex v-for="matching in matchingList" v-bind:key="matching.restaurant">
+          <matching-card
+            class="matching-card"
+            :matching="matching"
+          />
+        </v-flex>
+      </v-layout>
     </v-container>
   </v-layout>
 </template>
 
 <script>
-import MatchingList from '../components/MatchingList.vue'
+import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
 import FilterOption from '../components/FilterOption.vue'
 
 export default {
   components: {
-    MatchingList,
+    MatchingCard,
     Toolbar,
     FilterOption
+  },
+  data () {
+    return {
+      matchingList: [
+        {
+          restaurant: 'Nine Ounce',
+          participating: false,
+          image: require('@/assets/nineounce.jpg')
+        },
+        {
+          restaurant: 'eggthumb',
+          participating: false,
+          image: require('@/assets/eggthumb.jpg')
+        },
+        {
+          restaurant: 'tendong',
+          participating: false,
+          image: require('@/assets/tendong.jpg')
+        }
+      ]
+    }
   }
 }
 </script>
@@ -41,5 +69,8 @@ export default {
   #main-message {
     font-size: 100px;
     color: white;
+  }
+  .matching-card {
+    margin-bottom: 10px;
   }
 </style>
