@@ -19,7 +19,7 @@
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
-                  label="Restaurant"
+                  label="Restaurants"
                   required
                 ></v-text-field>
               </v-flex>
