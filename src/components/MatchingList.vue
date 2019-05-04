@@ -3,17 +3,19 @@
         <v-expansion-panel expand focusable>
             <v-expansion-panel-content v-for="request in requests" :key="request">
                 <template v-slot:header>
-                    <div>
-                        <!-- <img :src="request.image"> -->
-                        <v-card-title primary-title>
-                            <h3>{{request.restaurant}}</h3>
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn flat color="red" v-if="!request.participating" @click="request.participating=true">Participate</v-btn>
-                            <v-btn flat color="red" v-else @click="request.participating=false">Cancel</v-btn>
-                        </v-card-actions>
-                    </div>
+                    <v-layout row>
+                        <img :src="request.image">
+                        <v-flex>
+                            <v-card-title primary-title>
+                                <h3>{{request.restaurant}}</h3>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn flat color="red" v-if="!request.participating" @click="request.participating=true">Participate</v-btn>
+                                <v-btn flat color="red" v-else @click="request.participating=false">Cancel</v-btn>
+                            </v-card-actions>
+                        </v-flex>
+                    </v-layout>
                 </template>
                 <v-card>
                     <v-card-text>
@@ -33,17 +35,17 @@ export default {
                 {
                     restaurant: 'Nine Ounce',
                     participating: false,
-                    image: '../assets/nineounce.jpg'
+                    image: require('@/assets/nineounce.jpg')
                 },
                 {
                     restaurant: 'eggthumb',
                     participating: false,
-                    image: '../assets/eggthumb.jpg'
+                    image: require('@/assets/eggthumb.jpg')
                 },
                 {
                     restaurant: 'tendong',
                     participating: false,
-                    image: '../assets/tendong.jpg'
+                    image: require('@/assets/tendong.jpg')
                 }
             ]
         }
@@ -51,6 +53,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+img {
+    width: 100px;
+    height: 100px;
+}
 </style>
