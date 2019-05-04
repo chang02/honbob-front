@@ -9,7 +9,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn flat to="/login"> Sign In </v-btn>
-      <v-btn flat> My page </v-btn>
+      <v-btn to="/mypage" flat> My page </v-btn>
       <v-menu :close-on-content-click="false" offset-y :nudge-width="250">
         <template v-slot:activator="{ on }">
           <v-btn flat v-on="on">
@@ -23,7 +23,7 @@
         </template>
         <v-card>
           <v-list>
-            <v-list-tile v-for="alarm in alarms" :key="alarm">
+            <v-list-tile v-for="alarm in alarms" :key="alarm.note">
               <v-layout column>
                 <v-list-tile-title>
                   {{alarm.note}}
@@ -61,8 +61,8 @@ export default {
 </script>
 
 <style>
-  #honbob-icon {
-    width: 25px;
-    height: 25px;
-  }
+#honbob-icon {
+  width: 25px;
+  height: 25px;
+}
 </style>
