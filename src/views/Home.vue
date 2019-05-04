@@ -7,7 +7,7 @@
         <v-container fill-height fluid>
           <v-layout fill-height align-center>
             <v-flex class="text-xs-center">
-              <h1 id="main-message">HONBOB</h1>
+              <h1 id="main-message">BOB TOGETHER</h1>
             </v-flex>
           </v-layout>
         </v-container>

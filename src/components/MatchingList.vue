@@ -1,29 +1,33 @@
 <template>
     <div id="matching-list">
-        <v-expansion-panel expand focusable>
-            <v-expansion-panel-content v-for="request in requests" :key="request">
-                <template v-slot:header>
-                    <v-layout row>
-                        <img :src="request.image">
-                        <v-flex>
-                            <v-card-title primary-title>
-                                <h3>{{request.restaurant}}</h3>
-                            </v-card-title>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="red" v-if="!request.participating" @click="request.participating=true">Participate</v-btn>
-                                <v-btn flat color="red" v-else @click="request.participating=false">Cancel</v-btn>
-                            </v-card-actions>
-                        </v-flex>
-                    </v-layout>
-                </template>
-                <v-card>
-                    <v-card-text>
-                        this is contents
-                    </v-card-text>
+        <v-layout>
+            <v-flex xs6>
+                <v-card v-for="request in requests" :key="request">
+                    <v-img :src= "request.image" height="300px">
+                    </v-img>
+                    <v-card-title primary-title>
+                        <div>
+                        <div class="headline">{{request.restaurant}}</div>
+                        <span class="grey--text">1,000 miles of wonder</span>
+                        </div>
+                    </v-card-title>
+            
+                    <v-card-actions>
+                        <v-btn flat color="blue" v-if="!request.participating" @click="request.participating=true">Participate</v-btn>
+                        <v-btn flat color="red" v-else @click="request.participating=false">Cancel</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn icon @click="request.show = !request.show">
+                            <v-icon>{{ request.show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                        </v-btn>
+                    </v-card-actions>
+                    <v-slide-y-transition>
+                        <v-card-text v-show="request.show">
+                            Introduction
+                        </v-card-text>
+                    </v-slide-y-transition>
                 </v-card>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
+            </v-flex>
+        </v-layout>
     </div>
 </template>
 
@@ -35,17 +39,20 @@ export default {
                 {
                     restaurant: 'Nine Ounce',
                     participating: false,
-                    image: require('@/assets/nineounce.jpg')
+                    image: require('@/assets/nineounce.jpg'),
+                    show: true
                 },
                 {
                     restaurant: 'eggthumb',
                     participating: false,
-                    image: require('@/assets/eggthumb.jpg')
+                    image: require('@/assets/eggthumb.jpg'),
+                    show: false
                 },
                 {
                     restaurant: 'tendong',
                     participating: false,
-                    image: require('@/assets/tendong.jpg')
+                    image: require('@/assets/tendong.jpg'),
+                    show: false
                 }
             ]
         }
