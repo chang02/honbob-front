@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-flex xs6>
+    <v-flex>
       <v-card>
         <v-img :src= "matching.image" height="250px">
         </v-img>

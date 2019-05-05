@@ -14,19 +14,20 @@
         </v-container>
       </v-img>
     </v-card>
-    <v-container id="matching-container" align-center>
+    <v-container id="matching-container" align-center class="mb-4">
       <filter-option />
-      <v-layout row>
-        <v-layout column>
-          <v-flex v-for="matching in matchingList" v-bind:key="matching.restaurant">
+      <v-container grid-list-xl>
+        <v-layout wrap>
+          <v-flex xs12 sm6 v-for="matching in matchingList" v-bind:key="matching.restaurant">
             <matching-card
               class="matching-card"
               :matching="matching"
             />
           </v-flex>
         </v-layout>
-      </v-layout>
+      </v-container>
     </v-container>
+    <footer-with-git-hub/>
   </v-layout>
 </template>
 
@@ -35,13 +36,15 @@ import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
 import FilterOption from '../components/FilterOption.vue'
 import MatchingRegisterForm from '../components/MatchingRegisterForm.vue'
+import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 
 export default {
   components: {
     MatchingCard,
     Toolbar,
     FilterOption,
-    MatchingRegisterForm
+    MatchingRegisterForm,
+    FooterWithGitHub
   },
   data () {
     return {
@@ -79,7 +82,7 @@ export default {
     color: white;
     margin-top: 80px;
   }
-  .matching-card {
+  /* .matching-card {
     margin-bottom: 10px;
-  }
+  } */
 </style>
