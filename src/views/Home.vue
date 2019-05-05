@@ -82,7 +82,4 @@ export default {
     color: white;
     margin-top: 80px;
   }
-  /* .matching-card {
-    margin-bottom: 10px;
-  } */
 </style>
