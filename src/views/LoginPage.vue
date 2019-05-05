@@ -6,17 +6,20 @@
         <login></login>
       </v-flex>
     </v-layout>
+    <footer-with-git-hub />
   </div>
 </template>
 
 <script>
 import Login from '../components/Login.vue'
 import Toolbar from '../components/Toolbar.vue'
+import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 
 export default {
   components: {
     Login,
-    Toolbar
+    Toolbar,
+    FooterWithGitHub
   }
 }
 </script>

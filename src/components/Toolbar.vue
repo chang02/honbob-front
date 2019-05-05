@@ -4,7 +4,7 @@
       <router-link to="/">
         <img src="..\assets\rice.png" id="honbob-icon">
       </router-link>
-      HONBOB
+      BOB TOGETHER
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
@@ -47,11 +47,11 @@ export default {
     return {
       alarms: [
         {
-          note: '2 people newly joined in my dinner group',
+          note: '2 people newly joined in my dinner group.',
           time: '2019-05-04 14:30'
         },
         {
-          note: 'The appointment is cancelled',
+          note: 'My appointment was cancelled.',
           time: '2019-05-03 19:05'
         }
       ]

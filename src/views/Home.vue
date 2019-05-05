@@ -4,26 +4,30 @@
     <v-card>
       <v-img :src="require('../assets/foods.jpg')" id="front-image" aspect-ratio="4"
       gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)">
-        <v-container fill-height fluid>
-          <v-layout fill-height align-center>
-            <v-flex class="text-xs-center">
-              <h1 id="main-message">HONBOB</h1>
+        <v-container fluid>
+          <v-layout column align-center class="text-xs-center">
+            <v-flex>
+              <h1 id="main-message">BOB TOGETHER</h1>
             </v-flex>
+            <matching-register-form/>
           </v-layout>
         </v-container>
       </v-img>
     </v-card>
-    <v-container id="matching-container" align-center>
+    <v-container id="matching-container" align-center class="mb-4">
       <filter-option />
-      <v-layout column>
-        <v-flex v-for="matching in matchingList" v-bind:key="matching.restaurant">
-          <matching-card
-            class="matching-card"
-            :matching="matching"
-          />
-        </v-flex>
-      </v-layout>
+      <v-container grid-list-xl>
+        <v-layout wrap>
+          <v-flex xs12 sm6 v-for="matching in matchingList" v-bind:key="matching.restaurant">
+            <matching-card
+              class="matching-card"
+              :matching="matching"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-container>
+    <footer-with-git-hub/>
   </v-layout>
 </template>
 
@@ -31,12 +35,16 @@
 import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
 import FilterOption from '../components/FilterOption.vue'
+import MatchingRegisterForm from '../components/MatchingRegisterForm.vue'
+import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 
 export default {
   components: {
     MatchingCard,
     Toolbar,
-    FilterOption
+    FilterOption,
+    MatchingRegisterForm,
+    FooterWithGitHub
   },
   data () {
     return {
@@ -44,17 +52,20 @@ export default {
         {
           restaurant: 'Nine Ounce',
           participating: false,
-          image: require('@/assets/nineounce.jpg')
+          image: require('@/assets/nineounce.jpg'),
+          show: false
         },
         {
           restaurant: 'eggthumb',
           participating: false,
-          image: require('@/assets/eggthumb.jpg')
+          image: require('@/assets/eggthumb.jpg'),
+          show: false
         },
         {
           restaurant: 'tendong',
           participating: false,
-          image: require('@/assets/tendong.jpg')
+          image: require('@/assets/tendong.jpg'),
+          show: false
         }
       ]
     }
@@ -64,13 +75,14 @@ export default {
 
 <style>
   #front-image {
-      top: 20px;
+      top: 24px;
   }
   #main-message {
     font-size: 100px;
     color: white;
+    margin-top: 80px;
   }
-  .matching-card {
+  /* .matching-card {
     margin-bottom: 10px;
-  }
+  } */
 </style>
