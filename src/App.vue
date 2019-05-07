@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'App',
   components: {
@@ -15,6 +17,14 @@ export default {
     return {
       //
     }
+  },
+  mounted () {
+    this.check()
+  },
+  methods: {
+    ...mapActions({
+      check: 'check'
+    })
   }
 }
 </script>
