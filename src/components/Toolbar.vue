@@ -2,15 +2,17 @@
   <v-toolbar fixed>
     <v-toolbar-title>
       <router-link to="/">
-        <img src="..\assets\rice.png" id="honbob-icon">
+        <img src="../assets/rice.png" id="honbob-icon">
       </router-link>
       BOB TOGETHER
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-btn flat to="/login"> Sign In </v-btn>
-      <v-btn to="/mypage" flat> My page </v-btn>
-      <v-menu :close-on-content-click="false" offset-y :nudge-width="250">
+      <v-btn flat to="/login" v-if="user.id === null"> Sign In </v-btn>
+      <v-btn flat to="/register" v-if="user.id === null"> Sign Up </v-btn>
+      <v-btn to="/mypage" flat v-if="user.id !== null"> My page </v-btn>
+      <v-btn flat @click="logout" v-if="user.id !== null"> Log Out </v-btn>
+      <v-menu :close-on-content-click="false" offset-y :nudge-width="250" v-if="user.id !== null">
         <template v-slot:activator="{ on }">
           <v-btn flat v-on="on">
             <v-badge>
@@ -42,6 +44,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   data () {
     return {
@@ -56,6 +60,16 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
+  },
+  methods: {
+    ...mapActions({
+      logout: 'logout'
+    })
   }
 }
 </script>
