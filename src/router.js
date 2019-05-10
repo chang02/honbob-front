@@ -27,6 +27,11 @@ export default new Router({
       path: '/mypage',
       name: 'mypage',
       component: () => import('./views/MyPage.vue')
+    },
+    {
+      path: '/entrance',
+      name: 'entrance',
+      component: () => import('./views/EntrancePage.vue')
     }
   ]
 })
