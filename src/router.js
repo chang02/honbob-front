@@ -32,6 +32,11 @@ export default new Router({
       path: '/entrance',
       name: 'entrance',
       component: () => import('./views/EntrancePage.vue')
+    },
+    {
+      path: '/matching_register',
+      name: 'matchinng_register',
+      component: () => import('./views/MatchingRegisterPage.vue')
     }
   ]
 })

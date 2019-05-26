@@ -9,7 +9,7 @@
             <v-flex>
               <h1 id="main-message">BOB TOGETHER</h1>
             </v-flex>
-            <matching-register-form/>
+            <v-btn color="primary" dark large to='/matching_register'>Start Matching</v-btn>
           </v-layout>
         </v-container>
       </v-img>
@@ -35,7 +35,6 @@
 import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
 import FilterOption from '../components/FilterOption.vue'
-import MatchingRegisterForm from '../components/MatchingRegisterForm.vue'
 import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 
 export default {
@@ -43,7 +42,6 @@ export default {
     MatchingCard,
     Toolbar,
     FilterOption,
-    MatchingRegisterForm,
     FooterWithGitHub
   },
   data () {

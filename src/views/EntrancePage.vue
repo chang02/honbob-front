@@ -7,7 +7,7 @@
           <v-layout column align-center>
             <img src='../assets/rice-white.png' id="logo">
             <h1 id="entrance-title" class="text-xs-center"> BOB TOGETHER </h1>
-            <h2 id="entrance-intro" class="text-xs-center"> JOIN US </h2>
+            <h2 id="entrance-intro" class="text-xs-center"> simple intro </h2>
           </v-layout>
         </v-img>
       </v-flex>
