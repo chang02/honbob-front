@@ -10,7 +10,7 @@
             <v-text-field label="Password Confirm" v-model="password2" type="password"></v-text-field>
           </v-flex>
           <v-flex align-center class="text-xs-center">
-            <v-btn large @click="register({ username, password1, passwrod2 })"> Sign Up </v-btn>
+            <v-btn large @click="register({ username, password1, password2 })"> Sign Up </v-btn>
           </v-flex>
         </v-layout>
       </v-container>
