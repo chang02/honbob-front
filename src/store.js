@@ -61,6 +61,7 @@ export default new Vuex.Store({
       const data = response.data
       axios.defaults.headers.common['Authorization'] = `JWT ${data.token}`
       commit('LOGIN', data)
+      location.href = '/'
     },
     async login ({ commit }, { username, password }) {
       const response = await axios.post('/auth/login/', { username, password })
@@ -70,7 +71,7 @@ export default new Vuex.Store({
       location.href = '/'
     },
     async logout ({ commit }) {
-      await axios.get('/auth/logout/')
+      await axios.post('/auth/logout/')
       commit('LOGOUT')
     },
     async check ({ commit }) {
@@ -95,10 +96,8 @@ export default new Vuex.Store({
       const data = response.data
       return data
     },
-    async editProfile ({ dispatch }, { id, name, age, school, major, description, contact }) {
-      await axios.patch('/api/profile/', {
-        id, name, age, school, major, description, contact
-      })
+    async updateProfile ({ dispatch }, { id, payload }) {
+      await axios.patch(`/api/profile/${id}/`, payload)
       dispatch('getMyProfile')
     },
     async getMatchingList ({ commit }) {

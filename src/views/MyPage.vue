@@ -16,14 +16,7 @@
                   <v-flex xs5>
                     <v-layout column>
                       <v-flex xs12 class="attribute"><span>username</span></v-flex>
-                      <v-text-field xs12 readonly box v-model="profile.username"></v-text-field>
-                    </v-layout>
-                  </v-flex>
-
-                  <v-flex xs5>
-                    <v-layout column>
-                      <v-flex xs12 class="attribute">email</v-flex>
-                      <v-text-field xs12 readonly box v-model="profile.email"></v-text-field>
+                      <v-text-field xs12 readonly box v-model="user.username"></v-text-field>
                     </v-layout>
                   </v-flex>
                 </v-layout>
@@ -36,63 +29,68 @@
                 <v-layout row wrap justify-space-between pt-4>
                   <v-flex xs5>
                     <v-layout column>
+                      <v-flex xs12 class="attribute"><span>name</span></v-flex>
+                      <v-text-field xs12 v-model="newProfile.name" v-if="editing==0" placeholder="Male/Female" />
+                      <v-text-field xs12 readonly box v-model="profile.name" v-else/>
+                    </v-layout>
+                  </v-flex>
+
+                  <v-flex xs5>
+                    <v-layout column>
                       <v-flex xs12 class="attribute"><span>gender</span></v-flex>
-                      <v-text-field xs12 v-model="profile.gender" v-if="editing==0" placeholder="Male/Female" />
-                      <v-text-field xs12 readonly box v-model="profile.gender" v-else/>
+                      <v-select
+                        v-if="editing==0"
+                        v-model="newProfile.gender"
+                        :items="[{code:1,text:'Male'},{code:2,text:'Female'}]"
+                        item-text="text"
+                        item-value="code"
+                      />
+                      <v-text-field xs12 readonly box v-if="editing==-1&&profile.gender===1" value="Male" />
+                      <v-text-field xs12 readonly box v-if="editing==-1&&profile.gender===2" value="Female" />
                     </v-layout>
                   </v-flex>
 
                   <v-flex xs5>
                     <v-layout column>
                       <v-flex xs12 class="attribute">age</v-flex>
-                      <v-text-field xs12 v-model="profile.age" v-if="editing==0" />
+                      <v-text-field xs12 v-model="newProfile.age" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.age" v-else />
                     </v-layout>
                   </v-flex>
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute">workplace</v-flex>
-                      <v-text-field xs12 v-model="profile.workplace" v-if="editing==0" />
-                      <v-text-field xs12 readonly box v-model="profile.workplace" v-else />
+                      <v-flex xs12 class="attribute">school</v-flex>
+                      <v-text-field xs12 v-model="newProfile.school" v-if="editing==0" />
+                      <v-text-field xs12 readonly box v-model="profile.school" v-else />
+                    </v-layout>
+                  </v-flex>
+
+                  <v-flex xs5>
+                    <v-layout column>
+                      <v-flex xs12 class="attribute">major</v-flex>
+                      <v-text-field xs12 v-model="newProfile.major" v-if="editing==0" />
+                      <v-text-field xs12 readonly box v-model="profile.major" v-else />
                     </v-layout>
                   </v-flex>
 
                   <v-flex xs5>
                     <v-layout column>
                       <v-flex xs12 class="attribute">phone</v-flex>
-                      <v-text-field xs12 v-model="profile.phone" v-if="editing==0" />
-                      <v-text-field xs12 readonly box v-model="profile.phone" v-else />
+                      <v-text-field xs12 v-model="newProfile.contact" v-if="editing==0" />
+                      <v-text-field xs12 readonly box v-model="profile.contact" v-else />
+                    </v-layout>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-layout column>
+                      <v-flex xs12 class="attribute"><span>description</span></v-flex>
+                      <v-text-field xs12 v-model="newProfile.description" v-if="editing==0" />
+                      <v-text-field xs12 readonly box v-model="profile.description" v-else />
                     </v-layout>
                   </v-flex>
                 </v-layout>
                 <v-btn v-if="editing!=0" @click="editing=0">edit</v-btn>
-                <v-btn v-else @click="editing=-1">confirm</v-btn>
-              </v-card>
-
-              <v-card class="py-4 px-5" flat>
-                <v-card flat class="info-title">
-                  introude
-                </v-card>
-                <v-layout column justify-space-between pt-4>
-                  <v-flex xs5>
-                    <v-layout column>
-                      <v-flex xs12 class="attribute"><span>description</span></v-flex>
-                      <v-text-field xs12 v-model="profile.description" v-if="editing==1" />
-                      <v-text-field xs12 readonly box v-model="profile.description" v-else />
-                    </v-layout>
-                  </v-flex>
-
-                  <v-flex xs5>
-                    <v-layout column>
-                      <v-flex xs12 class="attribute">detail</v-flex>
-                      <v-textarea xs12 v-model="profile.detail" v-if="editing==1" />
-                      <v-textarea xs12 readonly box v-model="profile.detail" v-else />
-                    </v-layout>
-                  </v-flex>
-                </v-layout>
-                <v-btn v-if="editing!=1" @click="editing=1">edit</v-btn>
-                <v-btn v-else @click="editing=-1">confirm</v-btn>
+                <v-btn v-else @click="confirm">confirm</v-btn>
               </v-card>
             </v-tab-item>
 
@@ -131,6 +129,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import * as _ from 'lodash'
 import Toolbar from '../components/Toolbar.vue'
 import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 import MatchingCard from '../components/MatchingCard.vue'
@@ -145,16 +145,7 @@ export default {
     return {
       tab: 0,
       editing: -1,
-      profile: {
-        username: 'test-username',
-        email: 'test-email',
-        gender: 'Male',
-        age: 25,
-        workplace: 'SNU',
-        phone: '010-1234-5678',
-        description: '안녕하세요 저는~~~~',
-        detail: '서울에 거주하며 서울대학교를 다니고있고...~~'
-      },
+      newProfile: {},
       myProposal: [
         {
           restaurant: 'Nine Ounce',
@@ -177,6 +168,44 @@ export default {
           show: false
         }
       ]
+    }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'user',
+      profile: 'profile'
+    })
+  },
+  async created () {
+    await this.getMyProfile()
+    this.newProfile = _.cloneDeep(this.profile)
+  },
+  methods: {
+    ...mapActions({
+      getMyProfile: 'getMyProfile',
+      updateProfile: 'updateProfile'
+    }),
+    async confirm () {
+      const payload = {
+        age: this.newProfile.age,
+        contact: this.newProfile.contact,
+        description: this.newProfile.description,
+        gender: this.newProfile.gender,
+        major: this.newProfile.major,
+        name: this.newProfile.name,
+        school: this.newProfile.school
+      }
+      await this.updateProfile({ id: this.newProfile.user, payload })
+      this.editing = -1
+    }
+  },
+  filters: {
+    gender: function (value) {
+      if (value === 1) {
+        return 'Male'
+      } else if (value === 2) {
+        return 'Female'
+      }
     }
   }
 }
