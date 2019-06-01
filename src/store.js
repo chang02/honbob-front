@@ -80,6 +80,7 @@ export default new Vuex.Store({
         try {
           const response = await axios.get('/auth/user/')
           const data = response.data
+          await axios.get(`/api/user/${data.pk}/`)
           commit('CHECK', data)
         } catch (e) {
           axios.defaults.headers.common['Authorization'] = null

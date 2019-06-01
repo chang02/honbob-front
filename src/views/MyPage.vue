@@ -10,12 +10,12 @@
             <v-tab-item>
               <v-card class="py-4 px-5" flat>
                 <v-card flat class="info-title">
-                  account
+                  Account
                 </v-card>
                 <v-layout row wrap justify-space-between pt-4>
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute"><span>username</span></v-flex>
+                      <v-flex xs12 class="attribute"><span>Username</span></v-flex>
                       <v-text-field xs12 readonly box v-model="user.username"></v-text-field>
                     </v-layout>
                   </v-flex>
@@ -24,20 +24,20 @@
 
               <v-card class="py-4 px-5" flat>
                 <v-card flat class="info-title">
-                  base profile
+                  Base Profile
                 </v-card>
                 <v-layout row wrap justify-space-between pt-4>
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute"><span>name</span></v-flex>
-                      <v-text-field xs12 v-model="newProfile.name" v-if="editing==0" placeholder="Male/Female" />
+                      <v-flex xs12 class="attribute"><span>Name</span></v-flex>
+                      <v-text-field xs12 v-model="newProfile.name" v-if="editing==0" placeholder="Name" />
                       <v-text-field xs12 readonly box v-model="profile.name" v-else/>
                     </v-layout>
                   </v-flex>
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute"><span>gender</span></v-flex>
+                      <v-flex xs12 class="attribute"><span>Gender</span></v-flex>
                       <v-select
                         v-if="editing==0"
                         v-model="newProfile.gender"
@@ -52,7 +52,7 @@
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute">age</v-flex>
+                      <v-flex xs12 class="attribute">Age</v-flex>
                       <v-text-field xs12 v-model="newProfile.age" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.age" v-else />
                     </v-layout>
@@ -60,7 +60,7 @@
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute">school</v-flex>
+                      <v-flex xs12 class="attribute">School</v-flex>
                       <v-text-field xs12 v-model="newProfile.school" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.school" v-else />
                     </v-layout>
@@ -68,7 +68,7 @@
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute">major</v-flex>
+                      <v-flex xs12 class="attribute">Major</v-flex>
                       <v-text-field xs12 v-model="newProfile.major" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.major" v-else />
                     </v-layout>
@@ -76,14 +76,14 @@
 
                   <v-flex xs5>
                     <v-layout column>
-                      <v-flex xs12 class="attribute">phone</v-flex>
+                      <v-flex xs12 class="attribute">Phone</v-flex>
                       <v-text-field xs12 v-model="newProfile.contact" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.contact" v-else />
                     </v-layout>
                   </v-flex>
                   <v-flex xs12>
                     <v-layout column>
-                      <v-flex xs12 class="attribute"><span>description</span></v-flex>
+                      <v-flex xs12 class="attribute"><span>Description</span></v-flex>
                       <v-text-field xs12 v-model="newProfile.description" v-if="editing==0" />
                       <v-text-field xs12 readonly box v-model="profile.description" v-else />
                     </v-layout>
