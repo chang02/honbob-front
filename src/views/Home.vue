@@ -14,14 +14,15 @@
         </v-container>
       </v-img>
     </v-card>
-    <v-container id="matching-container" align-center class="mb-4">
-      <filter-option />
+    <v-container id="matching-container" align-center class="mb-4" my-5>
+      <!-- <filter-option /> -->
       <v-container grid-list-xl>
         <v-layout wrap>
-          <v-flex xs12 sm6 v-for="matching in matchingList" v-bind:key="matching.restaurant">
+          <v-flex xs12 sm6 v-for="(matching,key) in matchingList" v-bind:key="key">
             <matching-card
               class="matching-card"
               :matching="matching"
+              :updateMatchingList="updateMatchingList"
             />
           </v-flex>
         </v-layout>
@@ -35,47 +36,31 @@
 import { mapActions } from 'vuex'
 import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
-import FilterOption from '../components/FilterOption.vue'
+// import FilterOption from '../components/FilterOption.vue'
 import FooterWithGitHub from '../components/FooterWithGitHub.vue'
 
 export default {
   components: {
     MatchingCard,
     Toolbar,
-    FilterOption,
+    // FilterOption,
     FooterWithGitHub
   },
   data () {
     return {
-      matchingList: [
-        {
-          restaurant: 'Nine Ounce',
-          participating: false,
-          image: require('@/assets/nineounce.jpg'),
-          show: false
-        },
-        {
-          restaurant: 'eggthumb',
-          participating: false,
-          image: require('@/assets/eggthumb.jpg'),
-          show: false
-        },
-        {
-          restaurant: 'tendong',
-          participating: false,
-          image: require('@/assets/tendong.jpg'),
-          show: false
-        }
-      ]
+      matchingList: []
     }
   },
   async created () {
-    this.matchingList = await this.getMatchingList()
+    await this.updateMatchingList()
   },
   methods: {
     ...mapActions({
       getMatchingList: 'getMatchingList'
-    })
+    }),
+    async updateMatchingList () {
+      this.matchingList = await this.getMatchingList()
+    }
   }
 }
 </script>

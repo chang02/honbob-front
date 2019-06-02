@@ -18,6 +18,12 @@ export default new Vuex.Store({
     },
     profile: state => {
       return state.profile
+    },
+    myMatchings: state => {
+      return state.profile.matchings
+    },
+    myRequests: state => {
+      return state.profile.requests
     }
   },
   mutations: {
@@ -101,8 +107,8 @@ export default new Vuex.Store({
       const data = response.data
       return data
     },
-    async createMatching ({ commit }, payload) {
-      await axios.post('/api/matchings/', payload)
+    async createMatching ({ commit }, { data }) {
+      await axios.post('/api/matchings/', data)
       location.href = '/'
     },
     async deleteMatching ({ commit }, { matchingId }) {
@@ -112,10 +118,8 @@ export default new Vuex.Store({
         }
       })
     },
-    async createMatchingRequest ({ commit }, { userId, matchingId, requestMessage }) {
-      await axios.post('/api/matchingrequest/', {
-        userId, matchingId, requestMessage
-      })
+    async createRequest ({ commit }, { payload }) {
+      await axios.post('/api/requests/', payload)
     },
     async deleteMatchingRequest ({ commit }, { id }) {
       await axios.delete('/lapi/matchingrequest/', {

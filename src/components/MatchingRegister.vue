@@ -108,17 +108,17 @@ export default {
       this.restaurantList = await this.getRestaurantList({ name: this.restaurantKeyword })
     },
     async register () {
-      const payload = {
+      const data = {
         owner: this.user.id,
         restaurant: this.selectedRestaurant.id,
         since: this.date,
         till: this.date,
         matchingMessage: this.matchingMessage,
-        filter: '',
+        filter: this.filter,
         maxNumber: parseInt(this.total),
         status: 1
       }
-      this.createMatching({ payload })
+      this.createMatching({ data })
     }
   }
 }

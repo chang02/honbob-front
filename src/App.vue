@@ -20,10 +20,12 @@ export default {
   },
   mounted () {
     this.check()
+    this.getMyProfile()
   },
   methods: {
     ...mapActions({
-      check: 'check'
+      check: 'check',
+      getMyProfile: 'getMyProfile'
     })
   }
 }
