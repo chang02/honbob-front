@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import MatchingCard from '../components/MatchingCard.vue'
 import Toolbar from '../components/Toolbar.vue'
 import FilterOption from '../components/FilterOption.vue'
@@ -67,6 +68,14 @@ export default {
         }
       ]
     }
+  },
+  async created () {
+    this.matchingList = await this.getMatchingList()
+  },
+  methods: {
+    ...mapActions({
+      getMatchingList: 'getMatchingList'
+    })
   }
 }
 </script>

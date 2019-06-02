@@ -10,9 +10,7 @@ export default new Vuex.Store({
       id: null,
       username: null
     },
-    profile: {},
-    matching: [],
-    matchingrequest: []
+    profile: {}
   },
   getters: {
     user: state => {
@@ -20,12 +18,6 @@ export default new Vuex.Store({
     },
     profile: state => {
       return state.profile
-    },
-    matching: state => {
-      return state.matching
-    },
-    matchingrequest: state => {
-      return state.matchingrequest
     }
   },
   mutations: {
@@ -40,6 +32,9 @@ export default new Vuex.Store({
         id: null,
         username: null
       }
+      state.profile = {}
+      state.matching = []
+      state.matchingrequest = []
     },
     CHECK (state, data) {
       state.user.id = data.pk
@@ -47,12 +42,6 @@ export default new Vuex.Store({
     },
     UPDATE_MY_PROFILE (state, data) {
       state.profile = data
-    },
-    UPDATE_MATCHING_LIST (state, data) {
-      state.matching = data
-    },
-    UPDATE_MATCHINGREQUEST_LIST (state, data) {
-      state.matchingrequest = data
     }
   },
   actions: {
@@ -73,6 +62,7 @@ export default new Vuex.Store({
     async logout ({ commit }) {
       await axios.post('/auth/logout/')
       commit('LOGOUT')
+      location.href = '/'
     },
     async check ({ commit }) {
       if (localStorage.getItem('honbob_token') !== null) {
@@ -101,43 +91,38 @@ export default new Vuex.Store({
       await axios.patch(`/api/profile/${id}/`, payload)
       dispatch('getMyProfile')
     },
-    async getMatchingList ({ commit }) {
-      const response = await axios.get('/api/matching/')
+    async getRestaurantList ({ commit }, { name }) {
+      const response = await axios.get(`/api/restaurants?name=${name}`)
       const data = response.data
-      commit('UPDATE_MATCHING_LIST', data)
+      return data
     },
-    async createMatching ({ dispatch }, { ownerId, restaurantId, requestMessage, filter, totalNumber }) {
-      await axios.post('/api/matching/', {
-        ownerId, restaurantId, requestMessage, filter, totalNumber
-      })
-      dispatch('getMatchingList')
+    async getMatchingList ({ commit }) {
+      const response = await axios.get('/api/matchings/')
+      const data = response.data
+      return data
     },
-    async deleteMatching ({ dispatch }, { matchingId }) {
+    async createMatching ({ commit }, payload) {
+      await axios.post('/api/matchings/', payload)
+      location.href = '/'
+    },
+    async deleteMatching ({ commit }, { matchingId }) {
       await axios.delete('/api/matching/', {
         data: {
           matchingId
         }
       })
-      dispatch('getMatchingList')
     },
-    async getMyMatchingRequestList ({ commit }) {
-      const response = await axios.get('/api/matchingrequest/self/')
-      const data = response.data
-      commit('UPDATE_MATCHINGREQUEST_LIST', data)
-    },
-    async createMatchingRequest ({ dispatch }, { userId, matchingId, requestMessage }) {
+    async createMatchingRequest ({ commit }, { userId, matchingId, requestMessage }) {
       await axios.post('/api/matchingrequest/', {
         userId, matchingId, requestMessage
       })
-      dispatch('getMyMatchingRequestList')
     },
-    async deleteMatchingRequest ({ dispatch }, { id }) {
+    async deleteMatchingRequest ({ commit }, { id }) {
       await axios.delete('/lapi/matchingrequest/', {
         data: {
           id
         }
       })
-      dispatch('getMyMatchingRequestList')
     }
   }
 })
