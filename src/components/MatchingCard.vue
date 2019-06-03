@@ -1,5 +1,40 @@
 <template>
   <v-layout>
+    <v-dialog class="requests-dialog" max-width="400" v-model="openRequestsDialog">
+      <v-card class="py-2">
+        <v-card-title>
+          <v-flex headline text-xs-center>신청자 목록</v-flex>
+        </v-card-title>
+        <v-card-text>
+          <v-layout row justify-center v-for="(request, key) in matching.requests" v-bind:key="key">
+            <v-flex xs6 py-2 body-1 text-xs-center blue--text style="cursor:pointer;" @click="$router.push({ path: `/profile/${request.user}` })">
+              {{request.user}} (user id)
+            </v-flex>
+            <v-flex xs3 v-if="buttonCode2(request) === 2">
+              <v-btn color="primary" small @click="accept(request)">수락</v-btn>
+            </v-flex>
+            <v-flex xs3 v-if="buttonCode2(request) === 2">
+              <v-btn color="secondary" small @click="decline(request)">거절</v-btn>
+            </v-flex>
+            <v-flex xs4 v-if="buttonCode2(request) === 3">
+              <v-btn color="secondary" small @click="cancelAccept(request)">수락 취소</v-btn>
+            </v-flex>
+            <v-flex xs4 v-if="buttonCode2(request) === 4">
+              <v-btn color="secondary" disabled small>수락 대기중</v-btn>
+            </v-flex>
+            <v-flex xs4 v-if="buttonCode2(request) === 4">
+              <v-btn color="secondary" small @click="cancelRequest(request)">참가 취소</v-btn>
+            </v-flex>
+            <v-flex xs4 v-if="buttonCode2(request) === 5">
+              <v-btn color="secondary" disabled small>수락됨</v-btn>
+            </v-flex>
+            <v-flex xs4 v-if="buttonCode2(request) === 5">
+              <v-btn color="secondary" small @click="cancelRequest(request)">참가 취소</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-flex>
       <v-card>
         <!-- <v-img :src="matching.image" height="250px">
@@ -33,7 +68,7 @@
         <v-card-text>
           <v-layout column ma-1>
             <v-flex class="content-list">
-              <span>글쓴이 : </span><span style="cursor: pointer" class="blue--text text--lighten-1" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
+              <span>글쓴이 : </span><span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
             </v-flex>
             <v-flex class="content-list">
               장소 : {{matching.restaurant}} (restaurant id)
@@ -45,7 +80,7 @@
               시간 : {{matching.since | datetimeToTime}}
             </v-flex>
             <v-flex class="content-list">
-              <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text text--lighten-1">{{matching.requests.length}} / {{matching.maxNumber}}</span>
+              <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}}</span>
             </v-flex>
             <v-flex class="content-list">
               상태 : {{matching.status | status}}
@@ -54,8 +89,11 @@
               <v-btn color="primary" v-if="buttonCode() === 0" @click="participate">참가신청</v-btn>
               <v-btn color="primary" disabled v-if="buttonCode() === 1">로그인 후 가능</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 2" @click="cancelMatching">삭제</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 3" disabled>수락 대기중</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 3" @click="cancelRequest">참가 취소</v-btn>
-              <v-btn color="primary" disabled v-if="buttonCode() === 4">꽉 참</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 4" disabled>수락됨</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 4" @click="cancelRequest">참가 취소</v-btn>
+              <v-btn color="primary" disabled v-if="buttonCode() === 5">꽉 참</v-btn>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -70,6 +108,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data () {
     return {
+      openRequestsDialog: false
     }
   },
   computed: {
@@ -89,7 +128,8 @@ export default {
     ...mapActions({
       createRequest: 'createRequest',
       deleteMatching: 'deleteMatching',
-      deleteMatchingRequest: 'deleteMatchingRequest'
+      deleteMatchingRequest: 'deleteMatchingRequest',
+      patchMatchingRequest: 'patchMatchingRequest'
     }),
     async participate () {
       const payload = {
@@ -112,17 +152,59 @@ export default {
       await this.deleteMatchingRequest({ id: f.id })
       await this.updateMatchingList()
     },
+    async accept (request) {
+      const payload = {
+        status: 2
+      }
+      await this.patchMatchingRequest({ id: request.id, payload })
+      await this.updateMatchingList()
+    },
+    async decline (request) {
+      await this.deleteMatchingRequest({ id: request.id })
+      await this.updateMatchingList()
+    },
+    async cancelAccept (request) {
+      const payload = {
+        status: 1
+      }
+      await this.patchMatchingRequest({ id: request.id, payload })
+      await this.updateMatchingList()
+    },
     buttonCode () {
       if (this.user.id === null) {
         return 1 // login 이후 가능
       } else if (this.user.id === this.matching.owner) {
         return 2 // 본인이 올린 매칭
-      } else if (this.matching.selfParticipated) {
-        return 3 // 꽉참
-      } else if (this.matching.requests.length >= this.matching.maxNumber) {
-        return 4 // 이미 본인이 참가함
+      } else if (this.matching.selfParticipated && !this.matching.accepted) {
+        return 3 // 이미 본인이 참가함, 수락 전
+      } else if (this.matching.selfParticipated && this.matching.accepted) {
+        return 4 // 이미 본인이 참가함, 수락 후
+      }else if (this.matching.requests.length >= this.matching.maxNumber) {
+        return 5 // 꽉참
       } else {
         return 0 // 참가 가능
+      }
+    },
+    buttonCode2 (request) {
+      if (this.user.id === null) {
+        return 1 // login 이후 가능
+      } else if (this.user.id === this.matching.owner) {
+        // 본인이 올린 매칭
+        if (request.status === 1) {
+          return 2 // 수락 가능한 상태
+        } else {
+          return 3 // 이미 수락한 상태
+        }
+      } else {
+        if (request.user === this.user.id) {
+          if (request.status == 1) {
+            return 4 // 매칭 신청 취소 할 수 있는 상태, 수락 대기중
+          } else {
+            return 5 // 매칭 신청 취소 할 수 있는 상태, 수락됨
+          }
+        } else {
+          return 6 // 그냥 나머지
+        }
       }
     }
   },
@@ -160,4 +242,8 @@ export default {
 .content-list {
   max-height: 30px;
 }
+/* .requests-dialog {
+  width: 500px;
+  height: 300px;
+} */
 </style>

@@ -39,8 +39,6 @@ export default new Vuex.Store({
         username: null
       }
       state.profile = {}
-      state.matching = []
-      state.matchingrequest = []
     },
     CHECK (state, data) {
       state.user.id = data.pk
@@ -113,6 +111,11 @@ export default new Vuex.Store({
           element.selfParticipated = false
         } else {
           element.selfParticipated = true
+          if (f.status === 1) {
+            element.accepted = false
+          } else if (f.status === 2) {
+            element.accepted = true
+          }
         }
       })
       return data
@@ -129,6 +132,9 @@ export default new Vuex.Store({
     },
     async deleteMatchingRequest ({ commit }, { id }) {
       await axios.delete(`/api/request/${id}/`)
+    },
+    async patchMatchingRequest ({ commit }, { id, payload }) {
+      await axios.patch(`/api/request/${id}/`, payload)
     }
   }
 })

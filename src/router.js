@@ -12,37 +12,58 @@ export const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        login: true,
+      }
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('./views/LoginPage.vue')
+      component: () => import('./views/LoginPage.vue'),
+      meta: {
+        login: false,
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('./views/RegisterPage.vue')
+      component: () => import('./views/RegisterPage.vue'),
+      meta: {
+        login: false,
+      }
     },
     {
       path: '/mypage',
       name: 'mypage',
-      component: () => import('./views/MyPage.vue')
+      component: () => import('./views/MyPage.vue'),
+      meta: {
+        login: true,
+      }
     },
     {
       path: '/profile/:id',
       name: 'profile',
-      component: () => import('./views/Profile.vue')
+      component: () => import('./views/Profile.vue'),
+      meta: {
+        login: true,
+      }
     },
     {
       path: '/entrance',
       name: 'entrance',
-      component: () => import('./views/EntrancePage.vue')
+      component: () => import('./views/EntrancePage.vue'),
+      meta: {
+        login: false,
+      }
     },
     {
       path: '/matching_register',
       name: 'matchinng_register',
-      component: () => import('./views/MatchingRegisterPage.vue')
+      component: () => import('./views/MatchingRegisterPage.vue'),
+      meta: {
+        login: true,
+      }
     }
   ]
 })
@@ -53,8 +74,17 @@ router.beforeEach(async (to, from, next) => {
     await store.dispatch('getMyProfile')
   } catch {
     // nothing
+    if (to.matched.some(m => m.meta.login) && store.state.user.id === null) {
+      next({ path: '/entrance' })
+    } else {
+      next()
+    }
   }
-  next()
+  if (to.matched.some(m => m.meta.login) && store.state.user.id === null) {
+    next({ path: '/entrance' })
+  } else {
+    next()
+  }
 })
 
 export default router
