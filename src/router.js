@@ -14,7 +14,7 @@ export const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        login: true,
+        login: true
       }
     },
     {
@@ -22,7 +22,7 @@ export const router = new Router({
       name: 'login',
       component: () => import('./views/LoginPage.vue'),
       meta: {
-        login: false,
+        login: false
       }
     },
     {
@@ -30,7 +30,7 @@ export const router = new Router({
       name: 'register',
       component: () => import('./views/RegisterPage.vue'),
       meta: {
-        login: false,
+        login: false
       }
     },
     {
@@ -38,7 +38,7 @@ export const router = new Router({
       name: 'mypage',
       component: () => import('./views/MyPage.vue'),
       meta: {
-        login: true,
+        login: true
       }
     },
     {
@@ -46,7 +46,7 @@ export const router = new Router({
       name: 'profile',
       component: () => import('./views/Profile.vue'),
       meta: {
-        login: true,
+        login: true
       }
     },
     {
@@ -54,7 +54,7 @@ export const router = new Router({
       name: 'entrance',
       component: () => import('./views/EntrancePage.vue'),
       meta: {
-        login: false,
+        login: false
       }
     },
     {
@@ -62,7 +62,7 @@ export const router = new Router({
       name: 'matchinng_register',
       component: () => import('./views/MatchingRegisterPage.vue'),
       meta: {
-        login: true,
+        login: true
       }
     }
   ]
@@ -74,7 +74,7 @@ router.beforeEach(async (to, from, next) => {
     await store.dispatch('getMyProfile')
   } catch {
     // nothing
-    if (to.matched.some(m => m.meta.login) && store.state.user.id === null) {
+    if (to.matched.some(m => m.meta.login)) {
       next({ path: '/entrance' })
     } else {
       next()

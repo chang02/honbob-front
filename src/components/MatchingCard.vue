@@ -83,17 +83,20 @@
               <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}}</span>
             </v-flex>
             <v-flex class="content-list">
-              상태 : {{matching.status | status}}
+              상태 : <span :class="`${statusColor()}--text`">{{matching.status | status}}</span>
             </v-flex>
             <v-flex text-xs-right>
               <v-btn color="primary" v-if="buttonCode() === 0" @click="participate">참가신청</v-btn>
               <v-btn color="primary" disabled v-if="buttonCode() === 1">로그인 후 가능</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 2" @click="cancelMatching">삭제</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="completeRecruit">모집완료하기</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="cancelMatching">삭제</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 2.2" @click="cancelCompleteRecruit">모집완료취소</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 3" disabled>수락 대기중</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 3" @click="cancelRequest">참가 취소</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 4" disabled>수락됨</v-btn>
               <v-btn color="secondary" v-if="buttonCode() === 4" @click="cancelRequest">참가 취소</v-btn>
               <v-btn color="primary" disabled v-if="buttonCode() === 5">꽉 참</v-btn>
+              <v-btn color="primary" disabled v-if="buttonCode() === 6">모집 마감됨</v-btn>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -127,11 +130,16 @@ export default {
   methods: {
     ...mapActions({
       createRequest: 'createRequest',
+      patchMatching: 'patchMatching',
       deleteMatching: 'deleteMatching',
       deleteMatchingRequest: 'deleteMatchingRequest',
       patchMatchingRequest: 'patchMatchingRequest'
     }),
     async participate () {
+      if (this.matching.status !== 1) {
+        alert('참가 신청을 할 수 없는 상태입니다')
+        return
+      }
       const payload = {
         user: this.user.id,
         matching: this.matching.id,
@@ -144,7 +152,33 @@ export default {
       await this.deleteMatching({ id: this.matching.id })
       await this.updateMatchingList()
     },
+    async completeRecruit () {
+      const requests = this.matching.requests
+      const f = requests.find((element) => {
+        return element.status === 1
+      })
+      if (f !== undefined) {
+        alert('수락하지 않은 요청이 있습니다')
+        return
+      }
+      const payload = {
+        status: 2
+      }
+      await this.patchMatching({ id: this.matching.id, payload })
+      await this.updateMatchingList()
+    },
+    async cancelCompleteRecruit () {
+      const payload = {
+        status: 1
+      }
+      await this.patchMatching({ id: this.matching.id, payload })
+      await this.updateMatchingList()
+    },
     async cancelRequest () {
+      if (this.matching.status !== 1) {
+        alert('참가 취소를 할 수 없는 상태입니다')
+        return
+      }
       const requests = this.matching.requests
       const f = requests.find((element) => {
         return element.user === this.user.id
@@ -164,6 +198,10 @@ export default {
       await this.updateMatchingList()
     },
     async cancelAccept (request) {
+      if (this.matching.status !== 1) {
+        alert('수락을 취소할 수 없는 상태입니다')
+        return
+      }
       const payload = {
         status: 1
       }
@@ -174,12 +212,16 @@ export default {
       if (this.user.id === null) {
         return 1 // login 이후 가능
       } else if (this.user.id === this.matching.owner) {
-        return 2 // 본인이 올린 매칭
+        if (this.matching.status === 1) {
+          return 2.1 // 본인이 올린 매칭, 모집완료 전
+        } else if (this.matching.status === 2) {
+          return 2.2 // 모집완료 후
+        }
       } else if (this.matching.selfParticipated && !this.matching.accepted) {
         return 3 // 이미 본인이 참가함, 수락 전
       } else if (this.matching.selfParticipated && this.matching.accepted) {
         return 4 // 이미 본인이 참가함, 수락 후
-      }else if (this.matching.requests.length >= this.matching.maxNumber) {
+      } else if (this.matching.requests.length >= this.matching.maxNumber) {
         return 5 // 꽉참
       } else {
         return 0 // 참가 가능
@@ -197,7 +239,7 @@ export default {
         }
       } else {
         if (request.user === this.user.id) {
-          if (request.status == 1) {
+          if (request.status === 1) {
             return 4 // 매칭 신청 취소 할 수 있는 상태, 수락 대기중
           } else {
             return 5 // 매칭 신청 취소 할 수 있는 상태, 수락됨
@@ -205,6 +247,13 @@ export default {
         } else {
           return 6 // 그냥 나머지
         }
+      }
+    },
+    statusColor () {
+      if (this.matching.status === 1) {
+        return 'green'
+      } else if (this.matching.status === 2) {
+        return 'red'
       }
     }
   },
@@ -229,6 +278,8 @@ export default {
     status (val) {
       if (val === 1) {
         return '모집중'
+      } else if (val === 2) {
+        return '모집 완료됨'
       }
     }
   }

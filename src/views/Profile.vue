@@ -68,22 +68,19 @@
 
 <script>
 import { mapActions } from 'vuex'
-import * as _ from 'lodash'
 import Toolbar from '../components/Toolbar.vue'
 import FooterWithGitHub from '../components/FooterWithGitHub.vue'
-import MatchingCard from '../components/MatchingCard.vue'
 
 export default {
   components: {
     Toolbar,
-    FooterWithGitHub,
-    MatchingCard
+    FooterWithGitHub
   },
   data () {
     return {
       tab: 0,
       id: this.$route.params.id,
-      profile: {},
+      profile: {}
     }
   },
   computed: {
@@ -94,7 +91,7 @@ export default {
   methods: {
     ...mapActions({
       getProfile: 'getProfile'
-    }),
+    })
   },
   filters: {
     gender: function (value) {

@@ -124,6 +124,9 @@ export default new Vuex.Store({
       await axios.post('/api/matchings/', payload)
       location.href = '/'
     },
+    async patchMatching ({ commit }, { id, payload }) {
+      await axios.patch(`/api/matching/${id}/`, payload)
+    },
     async deleteMatching ({ commit }, { id }) {
       await axios.delete(`/api/matching/${id}/`)
     },
