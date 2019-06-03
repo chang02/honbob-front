@@ -48,7 +48,7 @@
               신청 현황 : {{matching.requests.length}} / {{matching.maxNumber}}
             </v-flex>
             <v-flex class="content-list">
-              상태 : {{matching.status}} (status code)
+              상태 : {{matching.status | status}}
             </v-flex>
             <v-flex text-xs-right>
               <v-btn color="primary" v-if="participatable()" @click="participate">participate</v-btn>
@@ -96,7 +96,7 @@ export default {
       await this.updateMatchingList()
     },
     participatable () {
-      if (this.user.id !== null && this.user.id !== this.matching.owner && this.matching.requests.length < this.matching.maxNumber) {
+      if (this.user.id !== null && this.user.id !== this.matching.owner && this.matching.requests.length < this.matching.maxNumber && !this.matching.selfParticipated) {
         return true
       }
       return false
@@ -118,6 +118,11 @@ export default {
         return time
       } else {
         return ''
+      }
+    },
+    status (val) {
+      if (val === 1) {
+        return '모집중'
       }
     }
   }

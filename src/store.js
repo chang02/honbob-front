@@ -102,13 +102,23 @@ export default new Vuex.Store({
       const data = response.data
       return data
     },
-    async getMatchingList ({ commit }) {
+    async getMatchingList ({ commit, state }) {
       const response = await axios.get('/api/matchings/')
       const data = response.data
+      data.forEach((element) => {
+        const f = element.requests.find((element2) => {
+          return element2.user === state.user.id
+        })
+        if (f === undefined) {
+          element.selfParticipated = false
+        } else {
+          element.selfParticipated = true
+        }
+      })
       return data
     },
-    async createMatching ({ commit }, { data }) {
-      await axios.post('/api/matchings/', data)
+    async createMatching ({ commit }, { payload }) {
+      await axios.post('/api/matchings/', payload)
       location.href = '/'
     },
     async deleteMatching ({ commit }, { matchingId }) {

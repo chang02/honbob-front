@@ -108,7 +108,7 @@ export default {
       this.restaurantList = await this.getRestaurantList({ name: this.restaurantKeyword })
     },
     async register () {
-      const data = {
+      const payload = {
         owner: this.user.id,
         restaurant: this.selectedRestaurant.id,
         since: this.date,
@@ -118,7 +118,7 @@ export default {
         maxNumber: parseInt(this.total),
         status: 1
       }
-      this.createMatching({ data })
+      this.createMatching({ payload })
     }
   }
 }
