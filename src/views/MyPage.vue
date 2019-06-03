@@ -97,26 +97,26 @@
             <v-tab-item>
               <v-card class="py-4 px-5" flat>
                 <v-card flat class="info-title">
-                  my proposal
+                  내가 올린 매칭
                 </v-card>
                 <v-layout row wrap>
-                  <v-flex xs12 sm5 mr-3 my-3 v-for="matching in myProposal" v-bind:key="matching.restaurant">
+                  <v-flex xs12 sm5 mr-3 my-3 v-for="(myMatching, key) in myMatchings" v-bind:key="key">
                     <matching-card
                       class="matching-card"
-                      :matching="matching"
+                      :matching="myMatching"
                     />
                   </v-flex>
                 </v-layout>
                 <v-card flat class="info-title">
-                  my join
+                  내가 참가한 매칭
                 </v-card>
                 <v-layout row wrap>
-                  <v-flex xs12 sm5 mr-3 my-3 v-for="matching in myJoin" v-bind:key="matching.restaurant">
+                  <!-- <v-flex xs12 sm5 mr-3 my-3 v-for="(myRequest, key) in myRequests" v-bind:key="key">
                     <matching-card
                       class="matching-card"
-                      :matching="matching"
+                      :matching="myRequest"
                     />
-                  </v-flex>
+                  </v-flex> -->
                 </v-layout>
               </v-card>
             </v-tab-item>
@@ -173,7 +173,9 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user',
-      profile: 'profile'
+      profile: 'profile',
+      myMatchings: 'myMatchings',
+      myRequests: 'myRequests'
     })
   },
   async created () {

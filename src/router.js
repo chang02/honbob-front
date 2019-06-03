@@ -30,6 +30,11 @@ export const router = new Router({
       component: () => import('./views/MyPage.vue')
     },
     {
+      path: '/profile/:id',
+      name: 'profile',
+      component: () => import('./views/Profile.vue')
+    },
+    {
       path: '/entrance',
       name: 'entrance',
       component: () => import('./views/EntrancePage.vue')

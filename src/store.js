@@ -121,22 +121,14 @@ export default new Vuex.Store({
       await axios.post('/api/matchings/', payload)
       location.href = '/'
     },
-    async deleteMatching ({ commit }, { matchingId }) {
-      await axios.delete('/api/matching/', {
-        data: {
-          matchingId
-        }
-      })
+    async deleteMatching ({ commit }, { id }) {
+      await axios.delete(`/api/matching/${id}/`)
     },
     async createRequest ({ commit }, { payload }) {
       await axios.post('/api/requests/', payload)
     },
     async deleteMatchingRequest ({ commit }, { id }) {
-      await axios.delete('/lapi/matchingrequest/', {
-        data: {
-          id
-        }
-      })
+      await axios.delete(`/api/request/${id}/`)
     }
   }
 })

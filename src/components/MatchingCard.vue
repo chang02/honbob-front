@@ -33,7 +33,7 @@
         <v-card-text>
           <v-layout column ma-1>
             <v-flex class="content-list">
-              글쓴이 : {{matching.owner}} (owner id)
+              <span>글쓴이 : </span><span style="cursor: pointer" class="blue--text text--lighten-1" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
             </v-flex>
             <v-flex class="content-list">
               장소 : {{matching.restaurant}} (restaurant id)
@@ -45,14 +45,17 @@
               시간 : {{matching.since | datetimeToTime}}
             </v-flex>
             <v-flex class="content-list">
-              신청 현황 : {{matching.requests.length}} / {{matching.maxNumber}}
+              <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text text--lighten-1">{{matching.requests.length}} / {{matching.maxNumber}}</span>
             </v-flex>
             <v-flex class="content-list">
               상태 : {{matching.status | status}}
             </v-flex>
             <v-flex text-xs-right>
-              <v-btn color="primary" v-if="participatable()" @click="participate">participate</v-btn>
-              <v-btn color="primary" disabled v-else>participate</v-btn>
+              <v-btn color="primary" v-if="buttonCode() === 0" @click="participate">참가신청</v-btn>
+              <v-btn color="primary" disabled v-if="buttonCode() === 1">로그인 후 가능</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 2" @click="cancelMatching">삭제</v-btn>
+              <v-btn color="secondary" v-if="buttonCode() === 3" @click="cancelRequest">참가 취소</v-btn>
+              <v-btn color="primary" disabled v-if="buttonCode() === 4">꽉 참</v-btn>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -84,7 +87,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      createRequest: 'createRequest'
+      createRequest: 'createRequest',
+      deleteMatching: 'deleteMatching',
+      deleteMatchingRequest: 'deleteMatchingRequest'
     }),
     async participate () {
       const payload = {
@@ -95,11 +100,30 @@ export default {
       await this.createRequest({ payload })
       await this.updateMatchingList()
     },
-    participatable () {
-      if (this.user.id !== null && this.user.id !== this.matching.owner && this.matching.requests.length < this.matching.maxNumber && !this.matching.selfParticipated) {
-        return true
+    async cancelMatching () {
+      await this.deleteMatching({ id: this.matching.id })
+      await this.updateMatchingList()
+    },
+    async cancelRequest () {
+      const requests = this.matching.requests
+      const f = requests.find((element) => {
+        return element.user === this.user.id
+      })
+      await this.deleteMatchingRequest({ id: f.id })
+      await this.updateMatchingList()
+    },
+    buttonCode () {
+      if (this.user.id === null) {
+        return 1 // login 이후 가능
+      } else if (this.user.id === this.matching.owner) {
+        return 2 // 본인이 올린 매칭
+      } else if (this.matching.selfParticipated) {
+        return 3 // 꽉참
+      } else if (this.matching.requests.length >= this.matching.maxNumber) {
+        return 4 // 이미 본인이 참가함
+      } else {
+        return 0 // 참가 가능
       }
-      return false
     }
   },
   filters: {
