@@ -145,7 +145,8 @@ export default {
       patchMatching: 'patchMatching',
       deleteMatching: 'deleteMatching',
       deleteMatchingRequest: 'deleteMatchingRequest',
-      patchMatchingRequest: 'patchMatchingRequest'
+      patchMatchingRequest: 'patchMatchingRequest',
+      getMyProfile: 'getMyProfile'
     }),
     async participate () {
       if (this.matching.status !== 1) {
@@ -158,11 +159,19 @@ export default {
         requestMessage: '신청합니다'
       }
       await this.createRequest({ payload })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async cancelMatching () {
       await this.deleteMatching({ id: this.matching.id })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async completeRecruit () {
       const requests = this.matching.requests
@@ -177,14 +186,22 @@ export default {
         status: 2
       }
       await this.patchMatching({ id: this.matching.id, payload })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async cancelCompleteRecruit () {
       const payload = {
         status: 1
       }
       await this.patchMatching({ id: this.matching.id, payload })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async cancelRequest () {
       if (this.matching.status !== 1) {
@@ -196,18 +213,30 @@ export default {
         return element.user === this.user.id
       })
       await this.deleteMatchingRequest({ id: f.id })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async accept (request) {
       const payload = {
         status: 2
       }
       await this.patchMatchingRequest({ id: request.id, payload })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async decline (request) {
       await this.deleteMatchingRequest({ id: request.id })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     async cancelAccept (request) {
       if (this.matching.status !== 1) {
@@ -218,7 +247,11 @@ export default {
         status: 1
       }
       await this.patchMatchingRequest({ id: request.id, payload })
-      await this.updateMatchingList()
+      try {
+        await this.updateMatchingList()
+      } catch {
+        await this.getMyProfile()
+      }
     },
     buttonCode () {
       if (this.user.id === null) {
