@@ -16,17 +16,43 @@
     </v-card>
     <v-container id="matching-container" align-center class="mb-4" my-5>
       <!-- <filter-option /> -->
-      <v-container grid-list-xl>
-        <v-layout wrap>
-          <v-flex xs12 sm6 v-for="(matching,key) in matchingList" v-bind:key="key">
-            <matching-card
-              class="matching-card"
-              :matching="matching"
-              :updateMatchingList="updateMatchingList"
-            />
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <v-layout my-3 row>
+        <v-flex xs3 mr-1>
+          <v-text-field @change="updateMatchingList" label="식당 이름" v-model="filter.restaurant"></v-text-field>
+        </v-flex>
+        <v-flex xs3 mr-1>
+          <v-select
+            @change="updateMatchingList"
+            v-model="filter.gender"
+            :items="[{code:3,text:'Any'},{code:1,text:'Male'},{code:2,text:'Female'}]"
+            item-text="text"
+            item-value="code"
+          />
+        </v-flex>
+        <v-flex xs3 mr-1>
+          <v-text-field @change="updateMatchingList" label="최소 나이" type="number" v-model="filter.minage" />
+        </v-flex>
+        <v-flex xs3 mr-1>
+          <v-text-field @change="updateMatchingList" label="최대 나이" type="number" v-model="filter.maxage" />
+        </v-flex>
+      </v-layout>
+      <v-layout>
+        <v-flex xs6 mr-1>
+          <v-text-field @change="updateMatchingList" label="시작 시간" type="datetime" v-model="filter.since" />
+        </v-flex>
+        <v-flex xs6 mr-1>
+          <v-text-field @change="updateMatchingList" label="끝 시간" type="datetime" v-model="filter.till" />
+        </v-flex>
+      </v-layout>
+      <v-layout wrap>
+        <v-flex xs12 sm6 v-for="(matching,key) in matchingList" v-bind:key="key">
+          <matching-card
+            class="matching-card ma-3"
+            :matching="matching"
+            :updateMatchingList="updateMatchingList"
+          />
+        </v-flex>
+      </v-layout>
     </v-container>
     <footer-with-git-hub/>
   </v-layout>
@@ -48,7 +74,17 @@ export default {
   },
   data () {
     return {
-      matchingList: []
+      matchingList: [],
+      filter: {
+        restaurant: '',
+        gender: 3,
+        matchingMessage: '',
+        maxNumber: 100,
+        minage: 0,
+        maxage: 100,
+        since: '2010-01-01T01:00:00',
+        till: '2100-12-31T23:59:59'
+      }
     }
   },
   async created () {
@@ -59,7 +95,16 @@ export default {
       getMatchingList: 'getMatchingList'
     }),
     async updateMatchingList () {
-      this.matchingList = await this.getMatchingList()
+      this.matchingList = await this.getMatchingList({
+        restaurant: this.filter.restaurant,
+        gender: this.filter.gender,
+        matchingMessage: this.filter.matchingMessage,
+        maxNumber: this.filter.maxNumber,
+        minage: this.filter.minage,
+        maxage: this.filter.maxage,
+        since: this.filter.since,
+        till: this.filter.till
+      })
     }
   }
 }

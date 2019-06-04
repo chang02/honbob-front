@@ -9,7 +9,8 @@
             <v-text-field label="Password" v-model="password" type="password"></v-text-field>
           </v-flex>
           <v-flex align-center class="text-xs-center">
-            <v-btn large @click="login({ username, password })"> SIGN IN </v-btn>
+            <v-btn large color="primary" @click="login({ username, password })"> SIGN IN </v-btn>
+            <v-btn large @click="$router.push({ path: '/register' })"> SIGN UP </v-btn>
           </v-flex>
         </v-layout>
       </v-container>
