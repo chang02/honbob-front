@@ -74,10 +74,22 @@
               장소 : {{matching.restaurant}} (restaurant id)
             </v-flex>
             <v-flex class="content-list">
-              날짜 : {{matching.since | datetimeToDate}}
+              식사 날짜 : {{matching.since | datetimeToDate}}
             </v-flex>
             <v-flex class="content-list">
-              시간 : {{matching.since | datetimeToTime}}
+              식사 시간 : {{matching.since | datetimeToTime}}
+            </v-flex>
+            <v-flex class="content-list">
+              최소 나이 : {{matching.minage}}
+            </v-flex>
+            <v-flex class="content-list">
+              최대 나이 : {{matching.maxage}}
+            </v-flex>
+            <v-flex class="content-list">
+              선호 성별 : {{matching.gender | genderFilter}}
+            </v-flex>
+            <v-flex class="content-list">
+              키워드 : {{matching.keyword}}
             </v-flex>
             <v-flex class="content-list">
               <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}}</span>
@@ -280,6 +292,15 @@ export default {
         return '모집중'
       } else if (val === 2) {
         return '모집 완료됨'
+      }
+    },
+    genderFilter (val) {
+      if (val === 1) {
+        return '남성'
+      } else if (val === 2) {
+        return '여성'
+      } else {
+        return '상관 없음'
       }
     }
   }

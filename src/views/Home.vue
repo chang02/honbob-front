@@ -17,31 +17,38 @@
     <v-container id="matching-container" align-center class="mb-4" my-5>
       <!-- <filter-option /> -->
       <v-layout my-3 row>
-        <v-flex xs3 mr-1>
-          <v-text-field @change="updateMatchingList" label="식당 이름" v-model="filter.restaurant"></v-text-field>
-        </v-flex>
-        <v-flex xs3 mr-1>
+        <v-flex xs2 mr-1>
           <v-select
             @change="updateMatchingList"
+            label="성별"
             v-model="filter.gender"
             :items="[{code:3,text:'Any'},{code:1,text:'Male'},{code:2,text:'Female'}]"
             item-text="text"
             item-value="code"
           />
         </v-flex>
-        <v-flex xs3 mr-1>
+        <v-flex xs2 mr-1>
+          <v-text-field @change="updateMatchingList" type="number" label="최대 인원" v-model="filter.maxNumber"></v-text-field>
+        </v-flex>
+        <v-flex xs2 mr-1>
+          <v-text-field @change="updateMatchingList" label="식당 이름" v-model="filter.restaurant"></v-text-field>
+        </v-flex>
+        <v-flex xs2 mr-1>
           <v-text-field @change="updateMatchingList" label="최소 나이" type="number" v-model="filter.minage" />
         </v-flex>
-        <v-flex xs3 mr-1>
+        <v-flex xs2 mr-1>
           <v-text-field @change="updateMatchingList" label="최대 나이" type="number" v-model="filter.maxage" />
         </v-flex>
       </v-layout>
       <v-layout>
-        <v-flex xs6 mr-1>
+        <v-flex xs4 mr-1>
           <v-text-field @change="updateMatchingList" label="시작 시간" type="datetime" v-model="filter.since" />
         </v-flex>
-        <v-flex xs6 mr-1>
+        <v-flex xs4 mr-1>
           <v-text-field @change="updateMatchingList" label="끝 시간" type="datetime" v-model="filter.till" />
+        </v-flex>
+        <v-flex xs4 mr-1>
+          <v-text-field @change="updateMatchingList" label="키워드" v-model="filter.keyword" />
         </v-flex>
       </v-layout>
       <v-layout wrap>
@@ -83,7 +90,8 @@ export default {
         minage: 0,
         maxage: 100,
         since: '2010-01-01T01:00:00',
-        till: '2100-12-31T23:59:59'
+        till: '2100-12-31T23:59:59',
+        keyword: ''
       }
     }
   },
@@ -103,7 +111,8 @@ export default {
         minage: this.filter.minage,
         maxage: this.filter.maxage,
         since: this.filter.since,
-        till: this.filter.till
+        till: this.filter.till,
+        keyword: this.filter.keyword
       })
     }
   }

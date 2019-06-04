@@ -50,8 +50,8 @@
                   <v-text-field type="number" required v-model="total" />
                 </v-layout>
                 <v-layout row>
-                  <v-subheader>Keywords</v-subheader>
-                  <v-text-field v-model="keywords" />
+                  <v-subheader>Keyword</v-subheader>
+                  <v-text-field v-model="keyword" />
                 </v-layout>
                 <v-flex>
                   <v-textarea
@@ -114,7 +114,7 @@ export default {
         since: this.date,
         till: this.date,
         matchingMessage: this.matchingMessage,
-        filter: this.filter,
+        keyword: this.keyword,
         maxNumber: parseInt(this.total),
         status: 1
       }

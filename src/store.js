@@ -100,8 +100,8 @@ export default new Vuex.Store({
       const data = response.data
       return data
     },
-    async getMatchingList ({ commit, state }, { restaurant, gender, matchingMessage, maxNumber, minage, maxage, since, till }) {
-      const response = await axios.get(`/api/matchings/?restaurant=${restaurant}&gender=${gender}&matchingMessage=${matchingMessage}&maxNumber=${maxNumber}&minage=${minage}&maxage=${maxage}&since=${since}&till=${till}`)
+    async getMatchingList ({ commit, state }, { restaurant, gender, matchingMessage, maxNumber, minage, maxage, since, till, keyword }) {
+      const response = await axios.get(`/api/matchings/?restaurant=${restaurant}&gender=${gender}&matchingMessage=${matchingMessage}&maxNumber=${maxNumber}&minage=${minage}&maxage=${maxage}&since=${since}&till=${till}&keyword=${keyword}`)
       const data = response.data
       data.forEach((element) => {
         const f = element.requests.find((element2) => {
