@@ -35,85 +35,76 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-flex>
-      <v-card>
-        <!-- <v-img :src="matching.image" height="250px">
-        </v-img>
-        <v-card-title primary-title>
-          <div>
-            <div class="headline">{{matching.restaurant}}</div>
-            <span class="grey--text">matching info</span>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn icon @click="matching.show = !matching.show">
-            <v-icon>{{ matching.show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn flat color="blue" v-if="!matching.participating" @click="matching.participating=true">Participate</v-btn>
-          <v-btn flat color="red" v-else @click="matching.participating=false">Cancel</v-btn>
-        </v-card-actions>
-        <v-slide-y-transition>
-          <v-card-text v-show="matching.show">
-            Introduction
-          </v-card-text>
-        </v-slide-y-transition> -->
-        <v-card-title primary-title>
-          <v-layout row mx-1>
-            <v-flex class="headline">
-              {{matching.matchingMessage}}
-            </v-flex>
-          </v-layout>
-        </v-card-title>
-        <v-card-text>
-          <v-layout column ma-1>
-            <v-flex class="content-list">
-              <span>글쓴이 : </span><span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
-            </v-flex>
-            <v-flex class="content-list">
-              장소 : {{matching.restaurant}} (restaurant id)
-            </v-flex>
-            <v-flex class="content-list">
-              식사 날짜 : {{matching.since | datetimeToDate}}
-            </v-flex>
-            <v-flex class="content-list">
-              식사 시간 : {{matching.since | datetimeToTime}}
-            </v-flex>
-            <v-flex class="content-list">
-              최소 나이 : {{matching.minage}}
-            </v-flex>
-            <v-flex class="content-list">
-              최대 나이 : {{matching.maxage}}
-            </v-flex>
-            <v-flex class="content-list">
-              선호 성별 : {{matching.gender | genderFilter}}
-            </v-flex>
-            <v-flex class="content-list">
-              키워드 : {{matching.keyword}}
-            </v-flex>
-            <v-flex class="content-list">
-              <span>신청 현황 : </span><span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}}</span>
-            </v-flex>
-            <v-flex class="content-list">
-              상태 : <span :class="`${statusColor()}--text`">{{matching.status | status}}</span>
-            </v-flex>
-            <v-flex text-xs-right>
-              <v-btn color="primary" v-if="buttonCode() === 0" @click="participate">참가신청</v-btn>
-              <v-btn color="primary" disabled v-if="buttonCode() === 1">로그인 후 가능</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="completeRecruit">모집완료하기</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="cancelMatching">삭제</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 2.2" @click="cancelCompleteRecruit">모집완료취소</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 3" disabled>수락 대기중</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 3" @click="cancelRequest">참가 취소</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 4" disabled>수락됨</v-btn>
-              <v-btn color="secondary" v-if="buttonCode() === 4" @click="cancelRequest">참가 취소</v-btn>
-              <v-btn color="primary" disabled v-if="buttonCode() === 5">꽉 참</v-btn>
-              <v-btn color="primary" disabled v-if="buttonCode() === 6">모집 마감됨</v-btn>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-      </v-card>
-    </v-flex>
+    <v-container fluid grid-list-md>
+      <template class="content-list">
+        <v-flex xs12 sm12>
+          <v-hover>
+            <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 10 : 2}`">
+              <v-card-title>
+                <h4>
+                  {{matching.matchingMessage}}
+                  <span :class="`${statusColor()}--text`">({{matching.status | status}})</span>
+                </h4>
+                <v-spacer></v-spacer>
+                #{{matching.keyword}}
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-list dense>
+                <v-list-tile>
+                  <v-list-tile-content>글쓴이: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    <span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>장소: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{matching.restaurant}} (restaurant id)
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>식사 일시: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{matching.since | datetimeToDate}} {{matching.since | datetimeToTime}}
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>나이: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{matching.minage}} ~ {{matching.maxage}}
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>선호 성별: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{matching.gender | genderFilter}}
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>신청 현황: </v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    <span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}} </span>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-flex text-xs-right>
+                <v-btn color="primary" v-if="buttonCode() === 0" @click="participate">참가신청</v-btn>
+                <v-btn color="primary" disabled v-if="buttonCode() === 1">로그인 후 가능</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="completeRecruit">모집완료하기</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 2.1" @click="cancelMatching">삭제</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 2.2" @click="cancelCompleteRecruit">모집완료취소</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 3" disabled>수락 대기중</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 3" @click="cancelRequest">참가 취소</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 4" disabled>수락됨</v-btn>
+                <v-btn color="secondary" v-if="buttonCode() === 4" @click="cancelRequest">참가 취소</v-btn>
+                <v-btn color="primary" disabled v-if="buttonCode() === 5">꽉 참</v-btn>
+                <v-btn color="primary" disabled v-if="buttonCode() === 6">모집 마감됨</v-btn>
+              </v-flex>
+              </v-list>
+            </v-card>
+          </v-hover>
+        </v-flex>
+      </template>
+    </v-container>
   </v-layout>
 </template>
 
@@ -346,6 +337,9 @@ export default {
 }
 .content-list {
   max-height: 30px;
+}
+.matching-info {
+  font-size: 30px;
 }
 /* .requests-dialog {
   width: 500px;
