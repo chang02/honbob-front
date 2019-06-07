@@ -121,7 +121,7 @@ export default new Vuex.Store({
       return data
     },
     async createMatching ({ commit }, { payload }) {
-      await axios.post('/api/matchings/', payload)
+      await axios.post('/api/matching/', payload)
       location.href = '/'
     },
     async patchMatching ({ commit }, { id, payload }) {
