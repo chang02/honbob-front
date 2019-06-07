@@ -7,8 +7,8 @@
         </v-card-title>
         <v-card-text>
           <v-layout row justify-center v-for="(request, key) in matching.requests" v-bind:key="key">
-            <v-flex xs6 py-2 body-1 text-xs-center blue--text style="cursor:pointer;" @click="$router.push({ path: `/profile/${request.user}` })">
-              {{request.user}} (user id)
+            <v-flex xs6 py-2 body-1 text-xs-center blue--text style="cursor:pointer;" @click="$router.push({ path: `/profile/${request.user.user}` })">
+              {{request.user.name}}
             </v-flex>
             <v-flex xs3 v-if="buttonCode2(request) === 2">
               <v-btn color="primary" small @click="accept(request)">수락</v-btn>
@@ -201,7 +201,7 @@ export default {
       }
       const requests = this.matching.requests
       const f = requests.find((element) => {
-        return element.user === this.user.id
+        return element.user.user === this.user.id
       })
       await this.deleteMatchingRequest({ id: f.id })
       try {
@@ -274,7 +274,7 @@ export default {
           return 3 // 이미 수락한 상태
         }
       } else {
-        if (request.user === this.user.id) {
+        if (request.user.user === this.user.id) {
           if (request.status === 1) {
             return 4 // 매칭 신청 취소 할 수 있는 상태, 수락 대기중
           } else {

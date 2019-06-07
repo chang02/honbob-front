@@ -105,7 +105,7 @@ export default new Vuex.Store({
       const data = response.data
       data.forEach((element) => {
         const f = element.requests.find((element2) => {
-          return element2.user === state.user.id
+          return element2.user.user === state.user.id
         })
         if (f === undefined) {
           element.selfParticipated = false
@@ -131,7 +131,7 @@ export default new Vuex.Store({
       await axios.delete(`/api/matching/${id}/`)
     },
     async createRequest ({ commit }, { payload }) {
-      await axios.post('/api/requests/', payload)
+      await axios.post('/api/request/', payload)
     },
     async deleteMatchingRequest ({ commit }, { id }) {
       await axios.delete(`/api/request/${id}/`)
