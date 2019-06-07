@@ -53,13 +53,13 @@
                 <v-list-tile>
                   <v-list-tile-content>글쓴이 </v-list-tile-content>
                   <v-list-tile-content class="align-end">
-                    <span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner}` })">{{matching.owner}} (owner id)</span>
+                    <span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner.user}` })">{{matching.owner.name}}</span>
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
                   <v-list-tile-content>장소 </v-list-tile-content>
                   <v-list-tile-content class="align-end">
-                    {{matching.restaurant}} (restaurant id)
+                    {{matching.restaurant.name}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
