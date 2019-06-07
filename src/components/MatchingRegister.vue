@@ -28,7 +28,7 @@
     </v-dialog>
     <v-layout wrap column my-5>
       <v-flex text-xs-center>
-        <span class="headline">Matching Registration</span>
+        <span class="headline"><h4>Matching Registration</h4></span>
       </v-flex>
       <v-container grid-list-md>
         <v-layout>
@@ -67,10 +67,10 @@
         </v-layout>
       </v-container>
     </v-layout>
-    <v-layout>
+    <v-layout id="submit-buttons">
       <v-spacer></v-spacer>
-      <v-btn color="red" flat to="/">CLOSE</v-btn>
-      <v-btn color="blue" flat @click="register">REGISTER</v-btn>
+      <v-btn color="error" to="/">CLOSE</v-btn>
+      <v-btn color="success" @click="register">REGISTER</v-btn>
       <v-spacer></v-spacer>
     </v-layout>
   </v-container>
@@ -125,4 +125,7 @@ export default {
 </script>
 
 <style>
+#submit-buttons {
+  padding-bottom: 50px;
+}
 </style>
