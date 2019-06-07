@@ -90,7 +90,7 @@ export default {
       restaurantKeyword: '',
       date: '',
       total: 0,
-      keywords: '',
+      keyword: '',
       matchingMessage: ''
     }
   },

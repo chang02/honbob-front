@@ -247,7 +247,7 @@ export default {
     buttonCode () {
       if (this.user.id === null) {
         return 1 // login 이후 가능
-      } else if (this.user.id === this.matching.owner) {
+      } else if (this.user.id === this.matching.owner.user) {
         if (this.matching.status === 1) {
           return 2.1 // 본인이 올린 매칭, 모집완료 전
         } else if (this.matching.status === 2) {
@@ -266,7 +266,7 @@ export default {
     buttonCode2 (request) {
       if (this.user.id === null) {
         return 1 // login 이후 가능
-      } else if (this.user.id === this.matching.owner) {
+      } else if (this.user.id === this.matching.owner.user) {
         // 본인이 올린 매칭
         if (request.status === 1) {
           return 2 // 수락 가능한 상태
@@ -337,9 +337,6 @@ export default {
 }
 .content-list {
   max-height: 30px;
-}
-.matching-info {
-  font-size: 30px;
 }
 /* .requests-dialog {
   width: 500px;
