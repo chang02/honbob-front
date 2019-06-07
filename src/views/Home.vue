@@ -9,7 +9,7 @@
             <v-flex>
               <h1 id="main-message">BOB TOGETHER</h1>
             </v-flex>
-            <v-btn color="primary" dark large to='/matching_register'>Start Matching</v-btn>
+            <v-btn color="warning" dark large to='/matching_register'>매칭 시작하기</v-btn>
           </v-layout>
         </v-container>
       </v-img>
