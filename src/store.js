@@ -81,9 +81,39 @@ export default new Vuex.Store({
         }
       }
     },
-    async getMyProfile ({ commit }) {
+    async getMyProfile ({ commit, state }) {
       const response = await axios.get('/api/profile/self/')
       const data = response.data
+      data.matchings.forEach((element) => {
+        const f = element.requests.find((element2) => {
+          return element2.user.user === state.user.id
+        })
+        if (f === undefined) {
+          element.selfParticipated = false
+        } else {
+          element.selfParticipated = true
+          if (f.status === 1) {
+            element.accepted = false
+          } else if (f.status === 2) {
+            element.accepted = true
+          }
+        }
+      })
+      data.requests.forEach((element) => {
+        const f = element.matching.requests.find((element2) => {
+          return element2.user.user === state.user.id
+        })
+        if (f === undefined) {
+          element.matching.selfParticipated = false
+        } else {
+          element.matching.selfParticipated = true
+          if (f.status === 1) {
+            element.matching.accepted = false
+          } else if (f.status === 2) {
+            element.matching.accepted = true
+          }
+        }
+      })
       commit('UPDATE_MY_PROFILE', data)
     },
     async getProfile ({ commit }, { id }) {

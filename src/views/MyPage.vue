@@ -111,12 +111,12 @@
                   내가 참가한 매칭
                 </v-card>
                 <v-layout row wrap>
-                  <!-- <v-flex xs12 sm5 mr-3 my-3 v-for="(myRequest, key) in myRequests" v-bind:key="key">
+                  <v-flex xs12 sm5 mr-3 my-3 v-for="(myRequest, key) in myRequests" v-bind:key="key">
                     <matching-card
                       class="matching-card"
-                      :matching="myRequest"
+                      :matching="myRequest.matching"
                     />
-                  </v-flex> -->
+                  </v-flex>
                 </v-layout>
               </v-card>
             </v-tab-item>
@@ -145,29 +145,7 @@ export default {
     return {
       tab: 0,
       editing: -1,
-      newProfile: {},
-      myProposal: [
-        {
-          restaurant: 'Nine Ounce',
-          participating: true,
-          image: require('@/assets/nineounce.jpg'),
-          show: false
-        }
-      ],
-      myJoin: [
-        {
-          restaurant: 'eggthumb',
-          participating: true,
-          image: require('@/assets/eggthumb.jpg'),
-          show: false
-        },
-        {
-          restaurant: 'tendong',
-          participating: true,
-          image: require('@/assets/tendong.jpg'),
-          show: false
-        }
-      ]
+      newProfile: {}
     }
   },
   computed: {
