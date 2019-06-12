@@ -54,10 +54,9 @@
                 </v-flex>
                 <v-flex xs3>
                   <v-select
-                    @change="updateMatchingList"
                     label="성별"
                     v-model="gender"
-                    :items="[{code:3,text:'Any'},{code:1,text:'Male'},{code:2,text:'Female'}]"
+                    :items="[{code:3,text:'상관 없음'},{code:1,text:'남자'},{code:2,text:'여자'}]"
                     item-text="text"
                     item-value="code"
                   />

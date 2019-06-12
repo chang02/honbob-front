@@ -24,6 +24,9 @@ export default new Vuex.Store({
     },
     myRequests: state => {
       return state.profile.requests
+    },
+    myNotifications: state => {
+      return state.profile.notifications
     }
   },
   mutations: {
@@ -168,6 +171,15 @@ export default new Vuex.Store({
     },
     async patchMatchingRequest ({ commit }, { id, payload }) {
       await axios.patch(`/api/request/${id}/`, payload)
+    },
+    async createNotification ({ commit }, { payload }) {
+      await axios.post(`/api/notification/`, payload)
+    },
+    async patchNotification ({ commit }, { id, payload }) {
+      await axios.patch(`/api/notification/${id}/`, payload)
+    },
+    async deleteNotification ({ commit }, { id }) {
+      await axios.delete(`/api/notification/${id}/`)
     }
   }
 })

@@ -46,7 +46,7 @@
                   <span :class="`${statusColor()}--text`">({{matching.status | status}})</span>
                 </h4>
                 <v-spacer></v-spacer>
-                #{{matching.keyword}}
+                {{matching.keyword | keyword}}
               </v-card-title>
               <v-divider></v-divider>
               <v-list dense>
@@ -137,6 +137,8 @@ export default {
       deleteMatching: 'deleteMatching',
       deleteMatchingRequest: 'deleteMatchingRequest',
       patchMatchingRequest: 'patchMatchingRequest',
+      createNotification: 'createNotification',
+      patchNotification: 'patchNotification',
       getMyProfile: 'getMyProfile'
     }),
     async participate () {
@@ -150,6 +152,12 @@ export default {
         requestMessage: '신청합니다'
       }
       await this.createRequest({ payload })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>매칭에 새로운 참가 신청이 있습니다`,
+        matching: this.matching.id,
+        user: this.matching.owner.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -158,6 +166,14 @@ export default {
     },
     async cancelMatching () {
       await this.deleteMatching({ id: this.matching.id })
+      this.matching.requests.forEach(async (element) => {
+        const payload = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 취소되었습니다`,
+          matching: null,
+          user: element.user.user
+        }
+        await this.createNotification({ payload })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -177,6 +193,14 @@ export default {
         status: 2
       }
       await this.patchMatching({ id: this.matching.id, payload })
+      this.matching.requests.forEach(async (element) => {
+        const payload2 = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 모집완료 되었습니다`,
+          matching: this.matching.id,
+          user: element.user.user
+        }
+        await this.createNotification({ payload: payload2 })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -188,6 +212,14 @@ export default {
         status: 1
       }
       await this.patchMatching({ id: this.matching.id, payload })
+      this.matching.requests.forEach(async (element) => {
+        const payload2 = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 모집중으로 되었습니다`,
+          matching: this.matching.id,
+          user: element.user.user
+        }
+        await this.createNotification({ payload: payload2 })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -215,6 +247,12 @@ export default {
         status: 2
       }
       await this.patchMatchingRequest({ id: request.id, payload })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>에 참가신청이 수락되었습니다`,
+        matching: this.matching.id,
+        user: request.user.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -223,6 +261,12 @@ export default {
     },
     async decline (request) {
       await this.deleteMatchingRequest({ id: request.id })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>에 참가신청이 거절되었습니다`,
+        matching: this.matching.id,
+        user: request.user.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -326,6 +370,14 @@ export default {
       } else {
         return '상관 없음'
       }
+    },
+    keyword (val) {
+      const arr = val.split(' ')
+      let result = ''
+      for (let i = 0; i < arr.length; i += 1) {
+        result = result + ' #' + arr[i]
+      }
+      return result
     }
   }
 }

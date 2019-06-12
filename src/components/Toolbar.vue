@@ -17,26 +17,27 @@
           <v-btn flat v-on="on">
             <v-badge>
               Alarms
-              <template v-slot:badge v-bind="alarms">
-                {{alarms.length}}
+              <template v-slot:badge v-bind="myNotifications">
+                {{myNotifications.length}}
               </template>
             </v-badge>
           </v-btn>
         </template>
         <v-card>
-          <v-list>
-            <v-list-tile v-for="alarm in alarms" :key="alarm.note">
-              <v-layout column>
-                <v-list-tile-title>
-                  {{alarm.note}}
-                </v-list-tile-title>
-                <v-list-tile-sub-title>
-                  {{alarm.time}}
-                </v-list-tile-sub-title>
-                <v-divider></v-divider>
+          <v-layout column>
+            <v-flex pa-3 class="noti-message" v-for="(notification, key) in myNotifications.slice().reverse()" :key="key">
+              <v-layout>
+                <v-flex xs11 pt-1>
+                  {{notification.message}}
+                </v-flex>
+                <v-flex xs1>
+                  <v-icon style="cursor:pointer" @click="del(notification)">
+                    delete_forever
+                  </v-icon>
+                </v-flex>
               </v-layout>
-            </v-list-tile>
-          </v-list>
+            </v-flex>
+          </v-layout>
         </v-card>
       </v-menu>
     </v-toolbar-items>
@@ -49,27 +50,24 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      alarms: [
-        {
-          note: '2 people newly joined in my dinner group.',
-          time: '2019-05-04 14:30'
-        },
-        {
-          note: 'My appointment was cancelled.',
-          time: '2019-05-03 19:05'
-        }
-      ]
     }
   },
   computed: {
     ...mapGetters([
-      'user'
+      'user',
+      'myNotifications'
     ])
   },
   methods: {
     ...mapActions({
-      logout: 'logout'
-    })
+      logout: 'logout',
+      deleteNotification: 'deleteNotification',
+      getMyProfile: 'getMyProfile'
+    }),
+    async del (notification) {
+      await this.deleteNotification({ id: notification.id })
+      await this.getMyProfile()
+    }
   }
 }
 </script>
@@ -78,5 +76,8 @@ export default {
 #honbob-icon {
   width: 25px;
   height: 25px;
+}
+.noti-message {
+  font-size: 13px;
 }
 </style>
