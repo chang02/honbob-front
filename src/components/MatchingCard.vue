@@ -41,6 +41,7 @@
           <v-hover>
             <v-card color="blue-grey lighten-4" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 5}`">
               <v-card-title>
+                <v-icon>fastfood</v-icon>
                 <h4>
                   {{matching.matchingMessage}}
                   <span :class="`${statusColor()}--text`">({{matching.status | status}})</span>

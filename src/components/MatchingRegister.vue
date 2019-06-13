@@ -3,7 +3,7 @@
     <v-dialog persistent max-width="600px" v-model="selectRestaurant">
       <v-card>
         <v-card-title>
-          <span class="headline">Select Restaurant</span>
+          <span class="headline">식당을 선택하세요</span>
         </v-card-title>
         <v-card-text>
           <v-layout>
@@ -28,49 +28,47 @@
     </v-dialog>
     <v-layout wrap column my-5>
       <v-flex text-xs-center>
-        <span class="headline"><h4>Matching Registration</h4></span>
+        <div id="page-title"><h4>매칭 등록하기</h4></div>
       </v-flex>
       <v-container grid-list-md>
         <v-layout>
           <v-flex xs2></v-flex>
           <v-flex xs8>
-            <v-container>
-              <v-layout wrap column>
-                <v-layout row>
-                  <v-subheader>Restaurant</v-subheader>
-                  <v-text-field readonly :value="selectedRestaurant.name"></v-text-field>
-                  <v-btn color="primary" dark @click="selectRestaurant=true" large>Select Restaurant</v-btn>
-                </v-layout>
-                <v-layout row>
-                  <v-subheader>Date</v-subheader>
-                  <v-text-field type="datetime-local" v-model="date" />
-                </v-layout>
-                <v-layout row>
-                  <v-subheader>Total Number</v-subheader>
-                  <v-text-field type="number" required v-model="total" />
-                </v-layout>
-                <v-layout row>
-                  <v-subheader>Keyword</v-subheader>
-                  <v-text-field v-model="keyword" />
-                </v-layout>
-                <v-flex>
-                  <v-textarea
-                    outline
-                    label="Simple Introduction"
-                    value=""
-                    v-model="matchingMessage"
-                  />
-                </v-flex>
+            <v-layout wrap column>
+              <v-layout row>
+                <v-subheader>식사 장소</v-subheader>
+                <v-text-field readonly :value="selectedRestaurant.name"></v-text-field>
+                <v-btn color="primary" dark @click="selectRestaurant=true" large>식당 찾아보기</v-btn>
               </v-layout>
-            </v-container>
+              <v-layout row>
+                <v-subheader>식사 일시</v-subheader>
+                <v-text-field type="datetime-local" v-model="date" />
+              </v-layout>
+              <v-layout row>
+                <v-subheader>식사 인원</v-subheader>
+                <v-text-field type="number" required v-model="total" />
+              </v-layout>
+              <v-layout row>
+                <v-subheader>키워드</v-subheader>
+                <v-text-field v-model="keyword" />
+              </v-layout>
+              <v-flex>
+                <v-textarea
+                  outline
+                  label="하고 싶은 말"
+                  value=""
+                  v-model="matchingMessage"
+                />
+              </v-flex>
+            </v-layout>
           </v-flex>
         </v-layout>
       </v-container>
     </v-layout>
     <v-layout id="submit-buttons">
       <v-spacer></v-spacer>
-      <v-btn color="error" to="/">CLOSE</v-btn>
-      <v-btn color="success" @click="register">REGISTER</v-btn>
+      <v-btn color="error" to="/">나가기</v-btn>
+      <v-btn color="success" @click="register">등록하기</v-btn>
       <v-spacer></v-spacer>
     </v-layout>
   </v-container>
@@ -124,8 +122,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #submit-buttons {
   padding-bottom: 50px;
+}
+#page-title {
+  padding-top: 40px;
+  font-size: 25px;
 }
 </style>
