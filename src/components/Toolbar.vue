@@ -24,20 +24,20 @@
           </v-btn>
         </template>
         <v-card>
-          <v-layout column>
-            <v-flex pa-3 class="noti-message" v-for="(notification, key) in myNotifications.slice().reverse()" :key="key">
-              <v-layout>
-                <v-flex xs11 pt-1>
+          <v-list>
+            <v-list-tile pa-3 class="noti-message" v-for="(notification, key) in myNotifications.slice().reverse()" :key="key">
+              <v-layout column>
+                <v-list-tile>
                   {{notification.message}}
-                </v-flex>
-                <v-flex xs1>
+                  <v-spacer></v-spacer>
                   <v-icon style="cursor:pointer" @click="del(notification)">
                     delete_forever
                   </v-icon>
-                </v-flex>
+                </v-list-tile>
+                <v-divider></v-divider>
               </v-layout>
-            </v-flex>
-          </v-layout>
+            </v-list-tile>
+          </v-list>
         </v-card>
       </v-menu>
     </v-toolbar-items>

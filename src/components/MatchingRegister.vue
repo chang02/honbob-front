@@ -27,8 +27,8 @@
       </v-card>
     </v-dialog>
     <v-layout wrap column my-5>
-      <v-flex text-xs-center my-5>
-        <span class="headline"><h4>매칭 등록하기</h4></span>
+      <v-flex text-xs-center>
+        <div id="page-title"><h4>매칭 등록하기</h4></div>
       </v-flex>
       <v-container grid-list-md>
         <v-layout>
@@ -141,8 +141,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #submit-buttons {
   padding-bottom: 50px;
+}
+#page-title {
+  padding-top: 40px;
+  font-size: 25px;
 }
 </style>

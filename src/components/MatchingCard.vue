@@ -41,7 +41,8 @@
           <v-hover>
             <v-card color="blue-grey lighten-4" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 5}`">
               <v-card-title>
-                <h4>
+                <v-icon>fastfood</v-icon>
+                <h4 class="card-content">
                   {{matching.matchingMessage}}
                   <span :class="`${statusColor()}--text`">({{matching.status | status}})</span>
                 </h4>
@@ -51,38 +52,38 @@
               <v-divider></v-divider>
               <v-list dense>
                 <v-list-tile>
-                  <v-list-tile-content>글쓴이 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">글쓴이 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     <span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner.user}` })">{{matching.owner.name}}</span>
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>장소 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">장소 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.restaurant.name}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>식사 일시 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">식사 일시 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.since | datetimeToDate}} {{matching.since | datetimeToTime}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>나이 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">나이 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.minage}} - {{matching.maxage}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>선호 성별 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">선호 성별 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.gender | genderFilter}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>신청 현황 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">신청 현황 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     <span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}} </span>
                   </v-list-tile-content>
                 </v-list-tile>
@@ -394,4 +395,7 @@ export default {
   width: 500px;
   height: 300px;
 } */
+.card-content {
+  font-size: 16px;
+}
 </style>
