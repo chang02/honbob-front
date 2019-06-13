@@ -24,6 +24,9 @@ export default new Vuex.Store({
     },
     myRequests: state => {
       return state.profile.requests
+    },
+    myNotifications: state => {
+      return state.profile.notifications
     }
   },
   mutations: {
@@ -81,9 +84,39 @@ export default new Vuex.Store({
         }
       }
     },
-    async getMyProfile ({ commit }) {
+    async getMyProfile ({ commit, state }) {
       const response = await axios.get('/api/profile/self/')
       const data = response.data
+      data.matchings.forEach((element) => {
+        const f = element.requests.find((element2) => {
+          return element2.user.user === state.user.id
+        })
+        if (f === undefined) {
+          element.selfParticipated = false
+        } else {
+          element.selfParticipated = true
+          if (f.status === 1) {
+            element.accepted = false
+          } else if (f.status === 2) {
+            element.accepted = true
+          }
+        }
+      })
+      data.requests.forEach((element) => {
+        const f = element.matching.requests.find((element2) => {
+          return element2.user.user === state.user.id
+        })
+        if (f === undefined) {
+          element.matching.selfParticipated = false
+        } else {
+          element.matching.selfParticipated = true
+          if (f.status === 1) {
+            element.matching.accepted = false
+          } else if (f.status === 2) {
+            element.matching.accepted = true
+          }
+        }
+      })
       commit('UPDATE_MY_PROFILE', data)
     },
     async getProfile ({ commit }, { id }) {
@@ -105,7 +138,7 @@ export default new Vuex.Store({
       const data = response.data
       data.forEach((element) => {
         const f = element.requests.find((element2) => {
-          return element2.user === state.user.id
+          return element2.user.user === state.user.id
         })
         if (f === undefined) {
           element.selfParticipated = false
@@ -131,13 +164,22 @@ export default new Vuex.Store({
       await axios.delete(`/api/matching/${id}/`)
     },
     async createRequest ({ commit }, { payload }) {
-      await axios.post('/api/requests/', payload)
+      await axios.post('/api/request/', payload)
     },
     async deleteMatchingRequest ({ commit }, { id }) {
       await axios.delete(`/api/request/${id}/`)
     },
     async patchMatchingRequest ({ commit }, { id, payload }) {
       await axios.patch(`/api/request/${id}/`, payload)
+    },
+    async createNotification ({ commit }, { payload }) {
+      await axios.post(`/api/notification/`, payload)
+    },
+    async patchNotification ({ commit }, { id, payload }) {
+      await axios.patch(`/api/notification/${id}/`, payload)
+    },
+    async deleteNotification ({ commit }, { id }) {
+      await axios.delete(`/api/notification/${id}/`)
     }
   }
 })

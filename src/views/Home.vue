@@ -15,42 +15,49 @@
       </v-img>
     </v-card>
     <v-container id="matching-container" align-center class="mb-4" my-5>
-      <!-- <filter-option /> -->
-      <v-layout my-3 row>
-        <v-flex xs2 mr-1>
-          <v-select
-            @change="updateMatchingList"
-            label="성별"
-            v-model="filter.gender"
-            :items="[{code:3,text:'Any'},{code:1,text:'Male'},{code:2,text:'Female'}]"
-            item-text="text"
-            item-value="code"
-          />
-        </v-flex>
-        <v-flex xs2 mr-1>
-          <v-text-field @change="updateMatchingList" type="number" label="최대 인원" v-model="filter.maxNumber"></v-text-field>
-        </v-flex>
-        <v-flex xs2 mr-1>
-          <v-text-field @change="updateMatchingList" label="식당 이름" v-model="filter.restaurant"></v-text-field>
-        </v-flex>
-        <v-flex xs2 mr-1>
-          <v-text-field @change="updateMatchingList" label="최소 나이" type="number" v-model="filter.minage" />
-        </v-flex>
-        <v-flex xs2 mr-1>
-          <v-text-field @change="updateMatchingList" label="최대 나이" type="number" v-model="filter.maxage" />
-        </v-flex>
-      </v-layout>
-      <v-layout>
-        <v-flex xs4 mr-1>
-          <v-text-field @change="updateMatchingList" label="시작 시간" type="datetime" v-model="filter.since" />
-        </v-flex>
-        <v-flex xs4 mr-1>
-          <v-text-field @change="updateMatchingList" label="끝 시간" type="datetime" v-model="filter.till" />
-        </v-flex>
-        <v-flex xs4 mr-1>
-          <v-text-field @change="updateMatchingList" label="키워드" v-model="filter.keyword" />
-        </v-flex>
-      </v-layout>
+      <v-card color="amber lighten-4">
+        <v-toolbar card>
+          <i class="material-icons">search</i>
+          <v-toolbar-title class="font-weight-light">나에게 맞는 매칭 찾기</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-layout row>
+            <v-flex xs2 mr-1>
+              <v-select
+                @change="updateMatchingList"
+                label="성별"
+                v-model="filter.gender"
+                :items="[{code:3,text:'Any'},{code:1,text:'Male'},{code:2,text:'Female'}]"
+                item-text="text"
+                item-value="code"
+              />
+            </v-flex>
+            <v-flex xs2 mr-1>
+              <v-text-field @change="updateMatchingList" type="number" label="최대 인원" v-model="filter.maxNumber"></v-text-field>
+            </v-flex>
+            <v-flex xs4 mr-1>
+              <v-text-field @change="updateMatchingList" label="식당 이름" v-model="filter.restaurant"></v-text-field>
+            </v-flex>
+            <v-flex xs2 mr-1>
+              <v-text-field @change="updateMatchingList" label="최소 나이" type="number" v-model="filter.minage" />
+            </v-flex>
+            <v-flex xs2 mr-1>
+              <v-text-field @change="updateMatchingList" label="최대 나이" type="number" v-model="filter.maxage" />
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex xs4 mr-1>
+              <v-text-field @change="updateMatchingList" label="시작 시간" type="datetime" v-model="filter.since" />
+            </v-flex>
+            <v-flex xs4 mr-1>
+              <v-text-field @change="updateMatchingList" label="끝 시간" type="datetime" v-model="filter.till" />
+            </v-flex>
+            <v-flex xs4 mr-1>
+              <v-text-field @change="updateMatchingList" label="키워드" v-model="filter.keyword" />
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
       <v-layout wrap>
         <v-flex xs12 sm6 v-for="(matching,key) in matchingList" v-bind:key="key">
           <matching-card

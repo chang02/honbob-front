@@ -7,8 +7,8 @@
         </v-card-title>
         <v-card-text>
           <v-layout row justify-center v-for="(request, key) in matching.requests" v-bind:key="key">
-            <v-flex xs6 py-2 body-1 text-xs-center blue--text style="cursor:pointer;" @click="$router.push({ path: `/profile/${request.user}` })">
-              {{request.user}} (user id)
+            <v-flex xs6 py-2 body-1 text-xs-center blue--text style="cursor:pointer;" @click="$router.push({ path: `/profile/${request.user.user}` })">
+              {{request.user.name}}
             </v-flex>
             <v-flex xs3 v-if="buttonCode2(request) === 2">
               <v-btn color="primary" small @click="accept(request)">수락</v-btn>
@@ -42,48 +42,48 @@
             <v-card color="blue-grey lighten-4" slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 5}`">
               <v-card-title>
                 <v-icon>fastfood</v-icon>
-                <h4>
+                <h4 class="card-content">
                   {{matching.matchingMessage}}
                   <span :class="`${statusColor()}--text`">({{matching.status | status}})</span>
                 </h4>
                 <v-spacer></v-spacer>
-                #{{matching.keyword}}
+                {{matching.keyword | keyword}}
               </v-card-title>
               <v-divider></v-divider>
               <v-list dense>
                 <v-list-tile>
-                  <v-list-tile-content>글쓴이 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">글쓴이 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     <span style="cursor: pointer" class="blue--text" @click="$router.push({ path: `/profile/${matching.owner.user}` })">{{matching.owner.name}}</span>
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>장소 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">장소 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.restaurant.name}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>식사 일시 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">식사 일시 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.since | datetimeToDate}} {{matching.since | datetimeToTime}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>나이 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">나이 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.minage}} - {{matching.maxage}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>선호 성별 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">선호 성별 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     {{matching.gender | genderFilter}}
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
-                  <v-list-tile-content>신청 현황 </v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  <v-list-tile-content class="card-content">신청 현황 </v-list-tile-content>
+                  <v-list-tile-content class="align-end card-content">
                     <span style="cursor: pointer" class="blue--text" @click="openRequestsDialog=true">{{matching.requests.length}} / {{matching.maxNumber}} </span>
                   </v-list-tile-content>
                 </v-list-tile>
@@ -138,6 +138,8 @@ export default {
       deleteMatching: 'deleteMatching',
       deleteMatchingRequest: 'deleteMatchingRequest',
       patchMatchingRequest: 'patchMatchingRequest',
+      createNotification: 'createNotification',
+      patchNotification: 'patchNotification',
       getMyProfile: 'getMyProfile'
     }),
     async participate () {
@@ -151,6 +153,12 @@ export default {
         requestMessage: '신청합니다'
       }
       await this.createRequest({ payload })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>매칭에 새로운 참가 신청이 있습니다`,
+        matching: this.matching.id,
+        user: this.matching.owner.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -159,6 +167,14 @@ export default {
     },
     async cancelMatching () {
       await this.deleteMatching({ id: this.matching.id })
+      this.matching.requests.forEach(async (element) => {
+        const payload = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 취소되었습니다`,
+          matching: null,
+          user: element.user.user
+        }
+        await this.createNotification({ payload })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -178,6 +194,14 @@ export default {
         status: 2
       }
       await this.patchMatching({ id: this.matching.id, payload })
+      this.matching.requests.forEach(async (element) => {
+        const payload2 = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 모집완료 되었습니다`,
+          matching: this.matching.id,
+          user: element.user.user
+        }
+        await this.createNotification({ payload: payload2 })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -189,6 +213,14 @@ export default {
         status: 1
       }
       await this.patchMatching({ id: this.matching.id, payload })
+      this.matching.requests.forEach(async (element) => {
+        const payload2 = {
+          message: `<<${this.matching.matchingMessage}>>매칭이 모집중으로 되었습니다`,
+          matching: this.matching.id,
+          user: element.user.user
+        }
+        await this.createNotification({ payload: payload2 })
+      })
       try {
         await this.updateMatchingList()
       } catch {
@@ -202,7 +234,7 @@ export default {
       }
       const requests = this.matching.requests
       const f = requests.find((element) => {
-        return element.user === this.user.id
+        return element.user.user === this.user.id
       })
       await this.deleteMatchingRequest({ id: f.id })
       try {
@@ -216,6 +248,12 @@ export default {
         status: 2
       }
       await this.patchMatchingRequest({ id: request.id, payload })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>에 참가신청이 수락되었습니다`,
+        matching: this.matching.id,
+        user: request.user.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -224,6 +262,12 @@ export default {
     },
     async decline (request) {
       await this.deleteMatchingRequest({ id: request.id })
+      const payload2 = {
+        message: `<<${this.matching.matchingMessage}>>에 참가신청이 거절되었습니다`,
+        matching: this.matching.id,
+        user: request.user.user
+      }
+      await this.createNotification({ payload: payload2 })
       try {
         await this.updateMatchingList()
       } catch {
@@ -275,7 +319,7 @@ export default {
           return 3 // 이미 수락한 상태
         }
       } else {
-        if (request.user === this.user.id) {
+        if (request.user.user === this.user.id) {
           if (request.status === 1) {
             return 4 // 매칭 신청 취소 할 수 있는 상태, 수락 대기중
           } else {
@@ -327,6 +371,14 @@ export default {
       } else {
         return '상관 없음'
       }
+    },
+    keyword (val) {
+      const arr = val.split(' ')
+      let result = ''
+      for (let i = 0; i < arr.length; i += 1) {
+        result = result + ' #' + arr[i]
+      }
+      return result
     }
   }
 }
@@ -343,4 +395,7 @@ export default {
   width: 500px;
   height: 300px;
 } */
+.card-content {
+  font-size: 16px;
+}
 </style>
